@@ -30,6 +30,19 @@
             flex: 10 !important;
             padding: 30px 10%;
         }
+        
+        /* 🌟 드래그 크기 조절바 스타일 */
+        #resizer {
+            width: 8px;
+            background-color: #e9ecef;
+            cursor: col-resize;
+            transition: background-color 0.2s;
+            z-index: 20;
+        }
+        #resizer:hover, #resizer:active {
+            background-color: #adb5bd;
+        }
+
         /* 상단 컨트롤 영역 (드롭다운 + 해석 숨기기 버튼) */
         .top-controls {
             display: flex;
@@ -120,6 +133,7 @@
             margin-top: 0;
             border-bottom: 3px solid #adb5bd;
             padding-bottom: 15px;
+            margin-bottom: 15px;
         }
         .guide-text {
             font-size: 1.05rem;
@@ -131,7 +145,7 @@
             word-break: keep-all;
         }
         
-        /* 필터 버튼 영역 */
+        /* 🌟 필터 버튼 영역 */
         .filter-controls {
             display: flex;
             gap: 10px;
@@ -215,7 +229,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-top: 25px;
+            margin-bottom: 20px; /* 맨 위로 올리면서 margin-bottom 부여 */
         }
         .action-row {
             display: flex;
@@ -238,7 +252,7 @@
             filter: brightness(0.9);
         }
         
-        /* 사전 검색 및 삭제 버튼 색상 복구 */
+        /* 🌟 사전 검색 및 삭제 버튼 색상 복구 */
         .btn-dict {
             background-color: #03c75a; /* 초록색 */
             color: white;
@@ -248,7 +262,7 @@
             color: white;
         }
 
-        /* 인쇄 컨트롤 영역 스타일 */
+        /* 🌟 인쇄 컨트롤 영역 스타일 */
         .print-control-box {
             background: #dee2e6;
             padding: 15px;
@@ -321,6 +335,8 @@
         #print-area {
             display: none;
         }
+
+        /* 스마트폰 세로 모드일 때는 위아래로 배치되므로 조절바 숨김 */
         @media (max-width: 900px) and (orientation: portrait) {
             body {
                 flex-direction: column;
@@ -335,6 +351,9 @@
             .top-controls {
                 flex-direction: column;
             }
+            #resizer {
+                display: none !important;
+            }
             #sidebar {
                 flex: none;
                 height: auto;
@@ -348,7 +367,7 @@
             }
         }
 
-        /* ================= PDF 인쇄 전용 스타일 (한 장에 최대한 많이!) ================= */
+        /* ================= PDF 인쇄 전용 스타일 ================= */
         @media print {
             body {
                 display: block;
@@ -358,7 +377,7 @@
                 margin: 0;
                 font-family: 'Malgun Gothic', sans-serif;
             }
-            #article-container, #sidebar, #toggle-sidebar-btn {
+            #article-container, #sidebar, #resizer, #toggle-sidebar-btn {
                 display: none !important;
             }
             #print-area {
@@ -441,6 +460,7 @@
 </head>
 <body>
     <button id="toggle-sidebar-btn" onclick="toggleSidebar()">👁️ 단어장 숨기기</button>
+    
     <div id="article-container">
         <div class="top-controls">
             <select id="lesson-select" class="lesson-selector" onchange="changeLesson()">
@@ -454,24 +474,13 @@
         <div id="text-content"></div>
     </div>
     
+    <!-- 🌟 드래그 크기 조절바 -->
+    <div id="resizer"></div>
+    
     <div id="sidebar">
         <h2>📚 나의 단어장</h2>
-        <div class="guide-text">
-            ✍️ <b>사용 방법:</b><br>
-            1. <b>제목이나 지문</b>에서 모르는 <b>영단어</b>를 터치하세요.<br>
-            2. <b>[사전 검색]</b> 버튼으로 뜻을 찾아 붙여넣으세요.<br>
-            3. <b>[시험지 출력]</b> 버튼으로 나만의 테스트지를 만들어보세요!
-        </div>
-
-        <!-- 🌟 단어 미입력/입력 필터 버튼 -->
-        <div class="filter-controls">
-            <button class="btn filter-btn active" onclick="setFilter('all')" id="filter-all">전체 단어</button>
-            <button class="btn filter-btn" onclick="setFilter('empty')" id="filter-empty">뜻 미입력</button>
-            <button class="btn filter-btn" onclick="setFilter('filled')" id="filter-filled">뜻 입력완료</button>
-        </div>
-
-        <ul id="word-list"></ul>
         
+        <!-- 🌟 버튼들을 단어장 제목 바로 밑으로 이동 -->
         <div class="sidebar-actions">
             <div class="print-control-box">
                 <div class="print-control-title">🖨️ 인쇄 / 시험지 출력</div>
@@ -488,7 +497,24 @@
             </div>
             <button class="btn btn-clear" onclick="clearAllWords()">🗑️ 단어장 전체 비우기</button>
         </div>
+
+        <div class="guide-text">
+            ✍️ <b>사용 방법:</b><br>
+            1. <b>제목이나 지문</b>에서 모르는 <b>영단어</b>를 터치하세요.<br>
+            2. <b>[사전 검색]</b> 버튼으로 뜻을 찾아 붙여넣으세요.<br>
+            3. <b>[시험지 출력]</b> 버튼으로 나만의 테스트지를 만들어보세요!
+        </div>
+
+        <!-- 🌟 단어 미입력/입력 필터 버튼 -->
+        <div class="filter-controls">
+            <button class="btn filter-btn active" onclick="setFilter('all')" id="filter-all">전체 단어</button>
+            <button class="btn filter-btn" onclick="setFilter('empty')" id="filter-empty">뜻 미입력</button>
+            <button class="btn filter-btn" onclick="setFilter('filled')" id="filter-filled">뜻 입력완료</button>
+        </div>
+
+        <ul id="word-list"></ul>
     </div>
+    
     <div id="print-area"></div>
 
     <script>
@@ -733,7 +759,7 @@ Do you love the new hairstyle that most teenagers are wearing now, even though y
 If so, think again!
 만약 그렇다면, 다시 생각해 보라!
 You may be under the influence of the bandwagon effect.
-당신은 아마도 밴드왜건 효과의 영향을 받고 있을 수 있다.
+당신은 아마도 밴드왜건 효과의 영향을 받고 있을 수 대다.
 In psychology, the bandwagon effect refers to a phenomenon in which people do something primarily because other people are doing it, regardless of their own beliefs.
 심리학에서 밴드왜건 효과는 자기 자신의 신념과는 상관없이 주로 다른 사람들이 그것을 하고 있기 때문에 사람들이 어떤 일을 하는 현상을 가리킨다.
 Since human beings are social animals, the desire to conform is a part of our nature.
@@ -816,7 +842,7 @@ Only then will we truly have the power over our thoughts that Descartes believed
 
         let savedWords = JSON.parse(localStorage.getItem('myVocabDictionary')) || {};
         let isKorHidden = false;
-        let currentFilter = 'all'; // 전체, 미입력, 입력 필터 상태 저장
+        let currentFilter = 'all';
 
         function toggleTranslation() {
             isKorHidden = !isKorHidden;
@@ -870,7 +896,6 @@ Only then will we truly have the power over our thoughts that Descartes believed
             });
         }
 
-        // 필터 상태 변경 함수
         function setFilter(filterType) {
             currentFilter = filterType;
             document.getElementById('filter-all').classList.remove('active');
@@ -888,7 +913,6 @@ Only then will we truly have the power over our thoughts that Descartes believed
             Object.keys(savedWords).forEach(word => {
                 const mean = savedWords[word] || '';
 
-                // 필터링 적용
                 if (currentFilter === 'empty' && mean.trim() !== '') return;
                 if (currentFilter === 'filled' && mean.trim() === '') return;
 
@@ -932,6 +956,7 @@ Only then will we truly have the power over our thoughts that Descartes believed
                 meaningInput.addEventListener('input', (e) => {
                     savedWords[word] = e.target.value;
                     localStorage.setItem('myVocabDictionary', JSON.stringify(savedWords));
+                    // 입력 중에도 기본 상태('all') 갱신
                     generatePrintLayout('all');
                 });
 
@@ -939,6 +964,7 @@ Only then will we truly have the power over our thoughts that Descartes believed
                 li.appendChild(meaningInput);
                 list.appendChild(li);
             });
+            
             generatePrintLayout('all');
         }
 
@@ -1007,21 +1033,40 @@ Only then will we truly have the power over our thoughts that Descartes believed
             const sidebar = document.getElementById('sidebar');
             const article = document.getElementById('article-container');
             const btn = document.getElementById('toggle-sidebar-btn');
+            const resizer = document.getElementById('resizer');
             
             sidebar.classList.toggle('hidden');
             article.classList.toggle('full-width');
-            btn.innerText = sidebar.classList.contains('hidden') ? "📖 단어장 보기" : "👁️ 단어장 숨기기";
+            
+            if (sidebar.classList.contains('hidden')) {
+                btn.innerText = "📖 단어장 보기";
+                resizer.style.display = 'none';
+            } else {
+                btn.innerText = "👁️ 단어장 숨기기";
+                resizer.style.display = 'block';
+            }
         }
 
+        // 🌟 수정됨: 인쇄 오류(Race condition) 해결
         function printPDF(mode) {
             if (Object.keys(savedWords).length === 0) {
                 alert("인쇄할 단어가 없습니다. 먼저 지문에서 단어를 터치하여 추가해주세요!");
                 return;
             }
+            
+            // 선택한 모드로 DOM을 그리고
             generatePrintLayout(mode); 
-            window.print();            
-            generatePrintLayout('all'); 
+            
+            // 브라우저가 화면을 그릴 시간을 잠깐 주고 인쇄를 실행
+            setTimeout(() => {
+                window.print();
+            }, 100);
         }
+
+        // 🌟 수정됨: 인쇄가 끝나거나 취소된 후 화면을 다시 원래대로(모든 단어/뜻 보이기) 복구
+        window.addEventListener('afterprint', () => {
+            generatePrintLayout('all');
+        });
 
         function exportData() {
             if (Object.keys(savedWords).length === 0) {
@@ -1096,6 +1141,68 @@ Only then will we truly have the power over our thoughts that Descartes believed
                 }
             }
         });
+
+        // 🌟 본문 / 단어장 크기 조절 (Resizer)
+        const resizer = document.getElementById('resizer');
+        const leftSide = document.getElementById('article-container');
+        const rightSide = document.getElementById('sidebar');
+
+        let startX = 0;
+        let leftFlex = 5.5;
+        let rightFlex = 4.5;
+
+        const mouseDownHandler = function(e) {
+            startX = e.clientX || (e.touches && e.touches[0].clientX);
+            
+            leftSide.style.transition = 'none';
+            rightSide.style.transition = 'none';
+
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+            document.addEventListener('touchmove', mouseMoveHandler, { passive: false });
+            document.addEventListener('touchend', mouseUpHandler);
+        };
+
+        const mouseMoveHandler = function(e) {
+            const currentX = e.clientX || (e.touches && e.touches[0].clientX);
+            const dx = currentX - startX;
+            const containerWidth = document.body.getBoundingClientRect().width;
+            
+            const deltaFlex = (dx / containerWidth) * 10;
+            
+            let newLeftFlex = leftFlex + deltaFlex;
+            let newRightFlex = rightFlex - deltaFlex;
+
+            if (newLeftFlex < 2) {
+                newLeftFlex = 2;
+                newRightFlex = 8;
+            }
+            if (newRightFlex < 2) {
+                newRightFlex = 2;
+                newLeftFlex = 8;
+            }
+
+            leftSide.style.flex = newLeftFlex;
+            rightSide.style.flex = newRightFlex;
+            
+            if (e.type === 'touchmove') e.preventDefault();
+        };
+
+        const mouseUpHandler = function() {
+            leftFlex = parseFloat(leftSide.style.flex) || leftFlex;
+            rightFlex = parseFloat(rightSide.style.flex) || rightFlex;
+
+            leftSide.style.transition = 'flex 0.3s ease';
+            rightSide.style.transition = 'all 0.3s ease';
+
+            document.removeEventListener('mousemove', mouseMoveHandler);
+            document.removeEventListener('mouseup', mouseUpHandler);
+            document.removeEventListener('touchmove', mouseMoveHandler);
+            document.removeEventListener('touchend', mouseUpHandler);
+        };
+
+        resizer.addEventListener('mousedown', mouseDownHandler);
+        resizer.addEventListener('touchstart', mouseDownHandler);
 
         window.onload = () => {
             changeLesson();
