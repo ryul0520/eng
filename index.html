@@ -271,6 +271,11 @@
                     <button class="btn btn-test-mean" onclick="printPDF('meaning_test')">📝 뜻 쓰기 시험지</button>
                     <button class="btn btn-test-word" onclick="printPDF('word_test')">📝 영단어 쓰기 시험지</button>
                 </div>
+                <!-- 🌟 인쇄 순서 무작위 셔플 체크박스 옵션 추가 -->
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: #495057; cursor: pointer; margin-top: 5px; user-select: none;">
+                    <input type="checkbox" id="randomize-print-checkbox" style="width: 16px; height: 16px; cursor: pointer;">
+                    🔀 인쇄 시 단어 순서 랜덤으로 섞기
+                </label>
             </div>
             <div class="action-row">
                 <button class="btn btn-export" onclick="exportData()">📤 데이터 백업</button>
@@ -902,15 +907,25 @@ Only then will we truly have the power over our thoughts that Descartes believed
             generatePrintLayout('all');
         }
 
+        // 🌟 인쇄용 레이아웃 생성 시 무작위 정렬(셔플) 기능 추가
         function generatePrintLayout(mode = 'all') {
             const printArea = document.getElementById('print-area');
-            const wordsArr = Object.keys(savedWords).map(k => ({ 
+            let wordsArr = Object.keys(savedWords).map(k => ({ 
                 key: k, 
                 word: savedWords[k].displayWord, 
                 mean: savedWords[k].mean 
             }));
-            const totalWords = wordsArr.length;
             
+            // 랜덤 섞기 체크박스가 체크되어 있는 경우 순서 섞기 (Fisher-Yates 알고리즘)
+            const isRandom = document.getElementById('randomize-print-checkbox')?.checked;
+            if (isRandom && wordsArr.length > 0) {
+                for (let i = wordsArr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [wordsArr[i], wordsArr[j]] = [wordsArr[j], wordsArr[i]];
+                }
+            }
+
+            const totalWords = wordsArr.length;
             if (totalWords === 0) { printArea.innerHTML = ''; return; }
 
             const maxRowsPerPage = 42;
@@ -999,17 +1014,17 @@ Only then will we truly have the power over our thoughts that Descartes believed
                 const parsed = JSON.parse(rawText);
                 
                 if (parsed && parsed.version === 2 && parsed.vocab) {
-                    let migratedVocab = {};
+                    let migratedVococab = {};
                     for (let key in parsed.vocab) {
                         let item = parsed.vocab[key];
                         if (typeof item === 'string') {
-                            migratedVocab[key] = { displayWord: key, mean: item };
+                            migratedVococab[key] = { displayWord: key, mean: item };
                         } else {
-                            migratedVocab[key] = item;
+                            migratedVococab[key] = item;
                         }
                     }
                     return {
-                        vocab: migratedVocab,
+                        vocab: migratedVococab,
                         highlights: parsed.highlights || {}
                     };
                 }
