@@ -111,6 +111,1005 @@
         .word { cursor: pointer; transition: all 0.2s; border-radius: 4px; padding: 2px 4px; }
         .word:hover { background-color: #e9ecef; }
         
+        /* 🌟 형광펜 스타일 (노란색 테마로 수정) */
+        .highlighted { 
+            background-color: #fff3bf !important; 
+            color: #d9480f !important; 
+            font-weight: bold; 
+        }
+        /* 합쳐진 단어(숙어)를 위한 선명한 노란색 및 언더라인 형광펜 */
+        .highlighted-red { 
+            background-color: #ffe066 !important; 
+            color: #d9480f !important; 
+            font-weight: bold;
+            border-bottom: 2px solid #f59f00;
+        }
+        
+        #word-list { list-style-type: none; padding: 0; padding-bottom: 100px; margin: 0; flex-grow: 1; }
+        
+        /* 🌟 단어장 아이템 (드래그 앤 드롭 효과 추가) */
+        #word-list li { 
+            background: #ffffff; margin-bottom: 15px; padding: 18px; border-radius: 12px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 12px; 
+            border: 2px solid transparent; transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+        }
+        .draggable-li { cursor: grab; }
+        .draggable-li:active { cursor: grabbing; }
+        .drag-over-target { border: 2px dashed #f59f00 !important; background-color: #fff4e6 !important; transform: scale(1.02); }
+        .dragging { opacity: 0.5; box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important; }
+
+        .word-top-row { display: flex; justify-content: space-between; align-items: center; gap:10px;}
+        
+        /* 🌟 드래그 핸들 (모바일 및 시각적 안내용) */
+        .drag-handle {
+            cursor: inherit;
+            color: #ced4da;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            touch-action: none; /* 모바일에서 스크롤 대신 드래그 가능하게 */
+        }
+        .drag-handle:active { color: #f59f00; }
+
+        .word-title-input {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #d9480f;
+            border: none;
+            border-bottom: 2px dashed #ced4da;
+            background: transparent;
+            width: 100%;
+            padding: 5px 0;
+            outline: none;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .word-title-input:focus { border-bottom-color: #f59f00; background-color: #fff4e6; border-radius:4px;}
+        
+        .meaning-input { width: 100%; padding: 12px 15px; font-size: 1.1rem; border: 2px solid #dee2e6; border-radius: 8px; box-sizing: border-box; transition: border-color 0.2s; }
+        .meaning-input:focus { outline: none; border-color: #339af0; box-shadow: 0 0 0 3px rgba(51, 154, 240, 0.2); }
+        
+        .word-actions { display: flex; gap: 8px; white-space: nowrap;}
+        .sidebar-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .action-row { display: flex; gap: 10px; }
+        .btn { border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; text-decoration: none; display: inline-block; text-align: center; flex: 1; transition: filter 0.2s; }
+        .btn:active { filter: brightness(0.9); }
+        .btn-dict { background-color: #03c75a; color: white; }
+        .btn-delete { background-color: #fa5252; color: white; }
+
+        .print-control-box { background: #dee2e6; padding: 15px; border-radius: 10px; display: flex; flex-direction: column; gap: 10px; }
+        .print-control-title { font-size: 1.1rem; font-weight: bold; color: #343a40; margin-bottom: 5px; }
+        .btn-pdf { background-color: #e03131; color: white; padding: 12px; font-size: 1.1rem; }
+        .btn-test-mean { background-color: #1c7ed6; color: white; padding: 12px; font-size: 1.05rem; }
+        .btn-test-word { background-color: #f06595; color: white; padding: 12px; font-size: 1.05rem; }
+        .btn-export { background-color: #6741d9; color: white; padding: 15px; font-size: 1rem; }
+        .btn-import { background-color: #f59f00; color: white; padding: 15px; font-size: 1rem; }
+        .btn-clear { background-color: #868e96; color: white; padding: 15px; font-size: 1.1rem; }
+        
+        #toggle-sidebar-btn { position: fixed; bottom: 30px; right: 30px; background-color: #343a40; color: white; border: none; padding: 15px 25px; border-radius: 30px; font-size: 1.1rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; z-index: 1000; transition: transform 0.2s; }
+        #toggle-sidebar-btn:active { transform: scale(0.95); }
+        #print-area { display: none; }
+
+        #add-phrase-btn {
+            display: none;
+            position: fixed;
+            background-color: #0b7285;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 2000;
+            transform: translateX(-50%);
+            animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            from { transform: translateX(-50%) scale(0.8); opacity: 0; }
+            to { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 900px) and (orientation: portrait) {
+            body { flex-direction: column; overflow: auto; }
+            #article-container { flex: none; height: auto; padding: 20px; box-shadow: none; }
+            .top-controls { flex-direction: column; }
+            #resizer { display: none !important; }
+            #sidebar { flex: none; height: auto; padding: 20px; }
+            #toggle-sidebar-btn { bottom: 20px; right: 20px; padding: 12px 20px; font-size: 1rem; }
+            .word-top-row { flex-direction: row; align-items: center;}
+        }
+
+        /* ================= PDF 인쇄 전용 스타일 ================= */
+        @media print {
+            body { display: block; background: white; overflow: visible; height: auto; margin: 0; }
+            #article-container, #sidebar, #resizer, #toggle-sidebar-btn, #add-phrase-btn { display: none !important; }
+            #print-area { display: block; width: 100%; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .print-page { page-break-after: always; padding: 0; }
+            .print-page:last-child { page-break-after: avoid; }
+            .print-header { border-top: 2px solid #3b4252; border-bottom: 2px solid #d8dee9; padding: 8px 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; color: #4c566a; }
+            .print-header-title { font-size: 13pt; font-weight: 900; color: #2c3e50; }
+            .print-table-wrapper { display: flex; justify-content: space-between; gap: 3%; }
+            .print-table { width: 48.5%; border-collapse: collapse; table-layout: fixed; }
+            .print-table th, .print-table td { border: 1px solid #c8d0e0; padding: 4px 6px; vertical-align: middle; font-size: 10pt; height: 26px; }
+            .print-table th { background-color: #f4f6f9; color: #2e3440; font-weight: bold; text-align: center; border-top: 2px solid #81a1c1; border-bottom: 2px solid #81a1c1; }
+            .col-eng { width: 40%; font-weight: bold; color: #d9480f; word-wrap: break-word; }
+            .col-kor { width: 60%; color: #343a40; word-wrap: break-word; }
+        }
+    </style>
+</head>
+<body>
+    <button id="toggle-sidebar-btn" onclick="toggleSidebar()">👁️ 단어장 숨기기</button>
+    <button id="add-phrase-btn">➕ 단어장에 추가</button>
+    
+    <div id="article-container">
+        <div class="top-controls">
+            <select id="lesson-select" class="lesson-selector" onchange="changeLesson()">
+                <option value="lesson3_main">📖 3과 본문 (Child Prodigies)</option>
+                <option value="lesson3_extra">📑 3과 추가지문 (Neuroplasticity)</option>
+                <option value="lesson4_main">📖 4과 본문 (Decision Making)</option>
+            </select>
+            <button id="toggle-kor-btn" class="toggle-btn" onclick="toggleTranslation()">🙈 해석 숨기기</button>
+        </div>
+        <h1 id="article-title"></h1>
+        <div id="text-content"></div>
+    </div>
+    
+    <div id="resizer"></div>
+    
+    <div id="sidebar">
+        <h2>📚 나의 단어장</h2>
+        <div class="sidebar-actions">
+            <div class="print-control-box">
+                <div class="print-control-title">🖨️ 인쇄 / 시험지 출력</div>
+                <button class="btn btn-pdf" onclick="printPDF('all')">📄 전체 단어장 인쇄</button>
+                <div class="action-row">
+                    <button class="btn btn-test-mean" onclick="printPDF('meaning_test')">📝 뜻 쓰기 시험지</button>
+                    <button class="btn btn-test-word" onclick="printPDF('word_test')">📝 영단어 쓰기 시험지</button>
+                </div>
+            </div>
+            <div class="action-row">
+                <button class="btn btn-export" onclick="exportData()">📤 데이터 백업</button>
+                <button class="btn btn-import" onclick="document.getElementById('import-file').click()">📥 불러오기</button>
+                <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+            </div>
+            <button class="btn btn-clear" onclick="clearAllWords()">🗑️ 단어장 전체 비우기</button>
+        </div>
+
+        <div class="guide-text">
+            ✍️ <b>사용 방법:</b><br>
+            1. <b>단어 터치</b>: 모르는 단어를 누르면 연한 노란색 형광펜이 표시되며 추가됩니다.<br>
+            2. <b>문장 드래그</b>: 본문을 드래그해서 숙어도 추가 가능! (선명한 노란색 밑줄 표시)<br>
+            3. <b>단어장 내 결합</b>: 단어장 좌측 <b>점자(⋮⋮)</b> 아이콘을 꾹 눌러 <b>다른 단어 위로 드래그(드롭)하면 두 단어가 하나의 숙어로 합쳐집니다!</b> (스마트폰 지원)
+        </div>
+
+        <div class="filter-controls">
+            <button class="btn filter-btn active" onclick="setFilter('all')" id="filter-all">전체 단어</button>
+            <button class="btn filter-btn" onclick="setFilter('empty')" id="filter-empty">뜻 미입력</button>
+            <button class="btn filter-btn" onclick="setFilter('filled')" id="filter-filled">뜻 입력완료</button>
+        </div>
+
+        <ul id="word-list"></ul>
+    </div>
+    
+    <div id="print-area"></div>
+
+    <script>
+        const textDB = {
+            "lesson3_main": { title: "Child Prodigies: Myths and Misunderstandings", content: `
+Do you think you would be happy being a child prodigy, someone who is truly gifted in something at a very young age?
+여러분은 매우 어린 나이에 무언가에 매우 재능이 있는 사람인 신동이 되면 행복할 것이라고 생각하는가?
+Maybe you would, and maybe you wouldn't.
+아마도 여러분은 그럴 수도 있고 그렇지 않을 수도 있을 것이다.
+However, we live in a society that generally accepts the idea that giftedness leads to success, and success guarantees a life full of happiness.
+그러나 우리는 영재성이 성공으로 이끌며, 성공이 행복으로 가득 찬 삶을 보장한다는 생각을 일반적으로 받아들이는 사회에서 살고 있다.
+Does giftedness guarantee future success?
+영재성이 미래의 성공을 보장하는가?
+There are two ways to answer this question.
+이 질문에 대답하는 두 가지 방법이 있다.
+One is simply to track the achievements of precocious kids.
+하나는 단순하게 조숙한 아이들의 업적을 추적하는 것이다.
+There is a mid-1980s study of adults who attended New York City's highly regarded Hunter College Elementary School, which was founded in the 1920s as a training ground for America's future intellectual elite and only admitted children with an IQ of 155 or above.
+뉴욕시에서 매우 높이 평가되던 Hunter College 부속 초등학교에 다녔던 성인들을 대상으로 한 1980년대 중반의 한 연구가 있는데, 이 학교는 미국의 미래 지성인을 위한 양성소로써 1920년대에 설립되어 아이큐 155 이상의 아이들만 입학을 허락했던 곳이다.
+Yet the fate of the Hunter College child geniuses in the study was not greatness; it was simply being okay.
+그러나 이 연구에서 Hunter College 신동들의 운명은 그리 대단하지 않았다. 그저 괜찮았을 뿐이었다.
+Thirty years down the road, the Hunter graduates were all doing pretty well and were reasonably well adjusted and happy.
+30년 후에 Hunter 졸업생들은 모두 꽤 잘하고 있었고 상당히 잘 적응하고 행복했다.
+Most of them had good jobs and many had advanced degrees.
+그들 대부분은 좋은 직장을 얻었고 고급 학위를 받았다.
+But surprisingly, none of the Hunter graduates became CEOs of world-famous corporations, prominent politicians, well-known writers, or Nobel Prize winners; there were no people who were nationally known in their fields.
+그러나 놀랍게도, Hunter 졸업생 중 어느 누구도 세계적으로 유명한 기업의 최고 경영자, 저명한 정치인, 유명한 작가, 또는 노벨상 수상자가 되지 못했다. 즉, 자신의 분야에서 전국적으로 알려진 사람이 없었다.
+They were genius kids, but they were not genius adults.
+그들은 천재 어린이였으나 천재 성인은 아니었다.
+A similar pattern emerged in Ontario, Canada, in the 1970s.
+유사한 양상이 캐나다의 온타리오에서 1970년대에 나타났다.
+There was an elementary school with a team of elite runners.
+뛰어난 달리기 선수 팀이 있는 초등학교가 있었다.
+At that time, there were 15 nationally-ranked runners who were 13 and 14 years old.
+그 당시 13~14세인 전국적으로 상위권에 드는 달리기 선수들이 15명 있었다.
+According to research done ten years later, only one runner from that group became a top runner at the age of 24.
+10년 후의 연구에 따르면, 그 집단 출신 선수 중 단 한 명만이 24살에 최고의 달리기 선수가 되었다.
+In fact, the number-one runner at the age of 24 was someone known as a poor runner when he was young, Doug Consiglio.
+사실 24살의 최고 달리기 선수는 어렸을 때 실력 없는 달리기 선수로 알려진 Doug Consiglio였다.
+Doug was thought to be an awkward kid.
+Doug는 서툰 아이로 여겨졌다.
+When he was 14, all the other kids asked, "Why does he even bother?"
+그가 14살이었을 때 다른 모든 아이들은 '왜 그가 저렇게 애를 쓸까?'라고 물었다.
+Another way to look at precocity is to work backwards — to look at adult geniuses and see what they were like as kids.
+조숙함을 살펴보는 또 다른 방법은 거꾸로 거슬러 가 보는 것, 즉 성인 천재를 살펴보고 그들이 아이였을 때 어땠는지 보는 것이다.
+A number of studies have taken this approach, and they found a similar pattern.
+많은 연구들이 이 접근법을 택했고 유사한 양상을 발견했다.
+A study of 200 highly accomplished adults found that just 34 percent had been considered precocious as children.
+매우 뛰어난 200명의 성인을 대상으로 한 연구에 따르면 단지 34 퍼센트만이 어렸을 때 조숙한 것으로 여겨졌다고 한다.
+There is also a long list of historical geniuses who were quite ordinary as children; the list includes Copernicus, Rembrandt, Bach, Newton, Beethoven, Kant, and Leonardo da Vinci.
+어렸을 때 평범했던 역사적인 천재들도 많이 있다. 그 중에는 Copernicus, Rembrandt, Bach, Newton, Beethoven, Kant, and Leonardo da Vinci가 포함된다.
+None of these geniuses would have made it into Hunter College Elementary School.
+이 천재들 중 어느 누구도 Hunter College 부속 초등학교에 들어가지 못했을 것이다.
+As you can see from these studies, precocity is a trickier subject than people may ordinarily think.
+이런 연구들을 통해 알 수 있듯이 조숙함은 사람들이 흔히 생각하는 것보다 더 까다로운 주제이다.
+The benefits of earlier mastery are often overestimated.
+조기에 숙달하는 것의 이점이 종종 과대평가된다.
+There are many people who either started out good and went bad or started bad and ended up good.
+훌륭하게 시작했다가 형편없이 되는 사람들도 있고, 별 볼일 없이 시작했다가 결국 잘 된 사람들도 많다.
+Early acquisition of skills — which is often what we mean by precocity — may be a misleading indicator of later success.
+종종 우리가 '조숙함'의 의미라고 생각하는 기술의 조기 습득은 훗날의 성공의 잘못된 지표일 수 있다.
+When we call a child precocious, we have a very inaccurate definition of what we mean.
+어떤 아이를 조숙하다고 할 때 우리는 우리가 의미하는 것에 대해 매우 부정확한 정의를 내리고 있다.
+Generally, what we mean is that a person has an unusual level of intellectual or physical ability for his or her age.
+일반적으로 우리가 의미하는 것은 어떤 사람이 나이에 비해 특별한 수준의 지적 또는 신체적 능력을 가지고 있다는 것이다.
+Adult success has a lot to do with more than that.
+성인의 성공은 그것보다 더 많은 것과 관련이 있다.
+In our obsession with precocity, we are exaggerating the importance of being talented.
+조숙함에 대한 집착에서 우리는 (타고난) 재능이 있다는 것의 중요성을 과장하고 단다.
+Rather, deliberate practice toward a goal is much more important than natural-born ability.
+오히려 목표를 향한 계획적인 연습이 타고난 능력보다 훨씬 더 중요하다.
+For example, when we say that a great musician is naturally gifted, does that tell us that he or she practices a lot, wants to practice a lot, or likes to practice a lot?
+예를 들면, 우리가 훌륭한 음악가가 천부적인 재능이 있다고 말할 때, 그것이 우리에게 그 사람이 연습을 많이 하는지, 연습을 많이 하길 원하는지, 또는 연습을 많이 하길 좋아하는지를 알려주는가?
+People often cite Wolfgang Amadeus Mozart as a child prodigy, someone who acquired his musical skills very early.
+사람들은 종종 Wolfgang Amadeus Mozart를 신동, 즉 음악적 기술을 매우 일찍 습득한 사람으로 언급한다.
+He started to compose music at the age of four.
+그는 4세의 나이에 음악 작곡을 시작했다.
+By six, he traveled around Europe giving special performances with his father, Leopold.
+6살에 그는 아버지 Leopold와 함께 특별 공연을 하면서 유럽 전역을 돌아다녔다.
+He is, therefore, the perfect example of a precocious child.
+따라서 그는 조숙한 아이의 완벽한 예이다.
+However, there are faults in the Mozart myth.
+그러나 Mozart 신화에는 오류가 있다.
+First of all, the music he composed at four isn't any good.
+우선 그가 4세에 작곡한 음악은 그다지 훌륭하지 않다.
+His childhood works are basically arrangements of works by other composers.
+그의 어린 시절 작품은 실은 다른 작곡가 작품의 편곡이었다.
+Also, rather suspiciously, they were written down by his father.
+또한 그것들이 그의 아버지에 의해 쓰였음이 꽤 의심된다.
+Leopold was the 18th-century version of a modern day parent who goes all out to make his or her child a star.
+Leopold는 자신의 자녀를 스타로 만들기 위해 전력을 다하는 현대 부모의 18세기 버전이었다.
+Indeed Wolfgang's legendary precocity was exaggerated somewhat by his father's probable lying about his age.
+사실 Wolfgang의 전설적인 조숙함은 Mozart의 나이에 대한 아버지의 가능성 있는 거짓말에 의해 다소 과장되었다.
+Young Mozart's incredible musical ability might better be attributed to practice, practice, practice.
+어린 Mozart의 놀라운 음악적 능력은 이보다는 연습, 연습, 연습에 기인한 것일지도 모른다.
+Compelled to practice three hours a day from age three on, by age six, the young Wolfgang had practiced an astonishing 3,500 hours — three times more than anybody else in his peer group.
+3살부터 하루에 세 시간씩 연습해야만 했기 때문에 어린 Wolfgang은 6세가 되었을 때 3,500 시간이라는 믿기 힘든 시간을 연습했는데, 이 시간은 또래 집단에 있는 다른 누구보다 세 배 더 많은 시간이었다.
+Mozart's famous precocity as a musician was not so much natural musical ability as his ability to work hard, his circumstances, and a father that pushed him to do so.
+Mozart의 음악가로서의 잘 알려진 조숙함은 천부적인 음악적 재능이라기보다는 열심히 하는 그의 능력, 그의 상황, 그리고 그렇게 하도록 밀어붙인 아버지 때문이었다.
+A better example for what precocity really is may be the famous intellectual late-bloomer, Einstein.
+조숙함이 진정으로 무엇인지에 관한 더 좋은 예는 아마도 지적으로 늦게 꽃핀 사람으로 유명한 Einstein일 것이다.
+According to one biographer's description of the future physicist, Einstein displayed no remarkable native intelligence as a child.
+그 미래의 물리학자(Einstein)에 관한 한 전기 작가의 묘사에 따르면, Einstein은 어렸을 때 괄목할만한 천부적 지능을 보여주지 못했다.
+His success seems to have come from certain habits and personality traits— curiosity, resolve, and determination.
+그의 성공은 호기심, 의지, 그리고 결단력과 같은 특정한 습관과 성격적 특성에서 비롯된 것으로 보인다.
+No doubt, these traits are not particularly fascinating, but they are, perhaps, the more essential components of genius.
+의심할 여지없이 이런 특성들은 특별히 매력적인 것은 아니지만, 아마도 천재의 더 필수적인 구성 요소일 것이다.
+As seen from studies of precocity, a precocious child may not become a talented adult.
+조숙함에 관한 연구에서 본 것처럼, 조숙한 아이는 재능 있는 어른이 되지 않을 수도 있다.
+Furthermore, a talented adult may not have been a precocious child.
+게다가 재능 있는 어른이 조숙한 아이가 아니었을 수도 있다.
+Predictions from childhood about adult performance cannot be made based on relatively fixed traits such as IQ and early acquisition of skills.
+어린 시절을 통해 성인이 되었을 때의 성과를 예측하는 것은 IQ, 기술의 조기 습득과 같은 상대적으로 고정된 특성에 근거하여 예측할 수 없다.
+Instead, many of the traits that really matter in predicting adult success are variable traits like creativity, determination, and leadership.
+대신에 성인의 성공을 예측하는 데 있어 정말로 중요한 자질 중 다수는 창의성, 결단력, 그리고 리더십과 같은 가변적인 특성이다.
+Thus, if you want to know whether a 14-year-old runner will be a good runner when he or she is 24, you must simply wait ten years to find out how truly successful he or she has become.
+따라서 만약 여러분이 14세의 달리기 선수가 24세 때 훌륭한 선수가 될 것인지 알고 싶다면, 그가 정말로 성공하게 될지 알아내기 위해서는 그저 10년을 기다려야 한다.
+`},
+            "lesson3_extra": { title: "Lesson 3. Extra: Neuroplasticity", content: `Till recently it was believed that growing new brain cells was simply impossible.
+최근까지 새로운 뇌세포를 성장시키는 것은 단순히 불가능하다고 믿어졌다.`},
+            "lesson4_main": { title: "Psychology Behind Decision Making", content: `Psychology Behind Decision Making
+의사결정 배후의 심리학`}
+        };
+
+        let rawSavedWords = JSON.parse(localStorage.getItem('myVocabDictionary')) || {};
+        let savedWords = {};
+        for(let key in rawSavedWords) {
+            if(typeof rawSavedWords[key] === 'string') {
+                savedWords[key] = { displayWord: key, mean: rawSavedWords[key] };
+            } else {
+                savedWords[key] = rawSavedWords[key];
+            }
+        }
+
+        let highlights = JSON.parse(localStorage.getItem('myVocabHighlights')) || {};
+
+        let isKorHidden = false;
+        let currentFilter = 'all';
+        let draggedWordKey = null; 
+        let tempSelectedSpans = []; 
+
+        function saveData() {
+            localStorage.setItem('myVocabDictionary', JSON.stringify(savedWords));
+            localStorage.setItem('myVocabHighlights', JSON.stringify(highlights));
+        }
+
+        function toggleTranslation() {
+            isKorHidden = !isKorHidden;
+            document.body.classList.toggle('hide-kor', isKorHidden);
+            const btn = document.getElementById('toggle-kor-btn');
+            if(isKorHidden) { btn.innerText = "👁️ 해석 보기"; btn.classList.add('active'); } 
+            else { btn.innerText = "🙈 해석 숨기기"; btn.classList.remove('active'); }
+        }
+
+        function changeLesson() {
+            const lessonKey = document.getElementById('lesson-select').value;
+            renderText(lessonKey);
+        }
+
+        function renderText(lessonKey = "lesson3_main") {
+            const container = document.getElementById('text-content');
+            const titleEle = document.getElementById('article-title');
+            const currentData = textDB[lessonKey];
+            
+            let globalWordIdx = 0;
+
+            const titleWrapped = currentData.title.replace(/([a-zA-Z\-]+)/g, (match) => {
+                const id = `${lessonKey}-t-${globalWordIdx++}`;
+                return `<span class="word" data-id="${id}">${match}</span>`;
+            });
+            titleEle.innerHTML = titleWrapped;
+
+            const lines = currentData.content.trim().split('\n');
+            let htmlContent = '';
+            let lineIdx = 0;
+            lines.forEach(line => {
+                line = line.trim();
+                if (!line) return;
+                const isKorean = /[가-힣]/.test(line);
+                if (isKorean) {
+                    htmlContent += `<p class="kor-trans">${line}</p>`;
+                } else {
+                    const wrappedText = line.replace(/([a-zA-Z\-]+)/g, (match) => {
+                        const id = `${lessonKey}-${lineIdx}-${globalWordIdx++}`;
+                        return `<span class="word" data-id="${id}">${match}</span>`;
+                    });
+                    htmlContent += `<p class="eng-sentence">${wrappedText}</p>`;
+                }
+                lineIdx++;
+            });
+            container.innerHTML = htmlContent;
+            updateHighlights();
+        }
+
+        function updateHighlights() {
+            const spans = document.querySelectorAll('.word');
+            
+            spans.forEach(s => {
+                s.classList.remove('highlighted', 'highlighted-red');
+            });
+
+            Object.keys(highlights).forEach(spanId => {
+                const targetSpan = document.querySelector(`.word[data-id="${spanId}"]`);
+                if (targetSpan) {
+                    const highlightInfo = highlights[spanId];
+                    if (highlightInfo.type === 'phrase') {
+                        targetSpan.classList.add('highlighted-red'); // 진한 노란색(골드) 형광펜
+                    } else {
+                        targetSpan.classList.add('highlighted'); // 연한 노란색 형광펜
+                    }
+                }
+            });
+        }
+
+        function getSelectedWordSpans(selection) {
+            if (!selection || selection.rangeCount === 0) return [];
+            const words = [];
+            const allSpans = document.querySelectorAll('.word');
+            allSpans.forEach(span => {
+                if (selection.containsNode(span, true)) {
+                    words.push(span);
+                }
+            });
+            return words;
+        }
+
+        function mergeWords(dragKey, targetKey) {
+            const dragItem = savedWords[dragKey];
+            const targetItem = savedWords[targetKey];
+            if (!dragItem || !targetItem) return;
+
+            const defaultCombo = `${targetItem.displayWord} ${dragItem.displayWord}`;
+            const mergedPhrase = prompt("🔗 두 단어를 하나의 숙어(구문)로 합치시겠습니까?\n완성될 형태를 확인/수정해주세요:", defaultCombo);
+
+            if (mergedPhrase && mergedPhrase.trim() !== "") {
+                const newKey = mergedPhrase.toLowerCase().replace(/[^a-z\s\-]/g, '').replace(/\s+/g, ' ').trim();
+                
+                let combinedMean = [];
+                if(targetItem.mean.trim()) combinedMean.push(targetItem.mean.trim());
+                if(dragItem.mean.trim()) combinedMean.push(dragItem.mean.trim());
+
+                savedWords[newKey] = {
+                    displayWord: mergedPhrase,
+                    mean: combinedMean.join(", ")
+                };
+
+                delete savedWords[dragKey];
+                delete savedWords[targetKey];
+
+                Object.keys(highlights).forEach(spanId => {
+                    if (highlights[spanId].vocabKey === dragKey || highlights[spanId].vocabKey === targetKey) {
+                        highlights[spanId].vocabKey = newKey;
+                        highlights[spanId].type = 'phrase';
+                    }
+                });
+
+                saveData();
+                updateVocabulary();
+                updateHighlights();
+                focusOnWord(newKey);
+            }
+        }
+
+        function setFilter(filterType) {
+            currentFilter = filterType;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`filter-${filterType}`).classList.add('active');
+            updateVocabulary();
+        }
+
+        function updateVocabulary() {
+            const list = document.getElementById('word-list');
+            list.innerHTML = '';
+            
+            saveData();
+
+            Object.keys(savedWords).forEach(key => {
+                const item = savedWords[key];
+                const mean = item.mean || '';
+
+                if (currentFilter === 'empty' && mean.trim() !== '') return;
+                if (currentFilter === 'filled' && mean.trim() === '') return;
+
+                const li = document.createElement('li');
+                li.id = 'word-item-' + key.replace(/\s+/g, '-');
+                
+                li.draggable = true;
+                li.classList.add('draggable-li');
+                li.dataset.key = key;
+
+                li.addEventListener('dragstart', function(e) {
+                    draggedWordKey = this.dataset.key;
+                    this.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', this.dataset.key);
+                });
+                li.addEventListener('dragover', function(e) {
+                    e.preventDefault(); 
+                    if (this.dataset.key !== draggedWordKey) this.classList.add('drag-over-target');
+                });
+                li.addEventListener('dragleave', function(e) {
+                    this.classList.remove('drag-over-target');
+                });
+                li.addEventListener('drop', function(e) {
+                    e.preventDefault(); e.stopPropagation();
+                    this.classList.remove('drag-over-target');
+                    const targetKey = this.dataset.key;
+                    if (draggedWordKey && targetKey && draggedWordKey !== targetKey) {
+                        mergeWords(draggedWordKey, targetKey);
+                    }
+                });
+                li.addEventListener('dragend', function(e) {
+                    this.classList.remove('dragging');
+                    document.querySelectorAll('.draggable-li').forEach(item => item.classList.remove('drag-over-target'));
+                });
+
+                const topRow = document.createElement('div');
+                topRow.className = 'word-top-row';
+
+                const dragHandle = document.createElement('div');
+                dragHandle.className = 'drag-handle';
+                dragHandle.innerHTML = '⋮⋮';
+                dragHandle.title = "이 아이콘을 드래그해서 다른 단어와 합치기";
+                
+                dragHandle.addEventListener('touchstart', function(e) {
+                    e.preventDefault(); 
+                    draggedWordKey = li.dataset.key;
+                    li.classList.add('dragging');
+                }, {passive: false});
+
+                dragHandle.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const elem = document.elementFromPoint(touch.clientX, touch.clientY);
+                    
+                    document.querySelectorAll('.draggable-li').forEach(item => item.classList.remove('drag-over-target'));
+                    if (elem) {
+                        const targetLi = elem.closest('li.draggable-li');
+                        if (targetLi && targetLi.dataset.key !== draggedWordKey) {
+                            targetLi.classList.add('drag-over-target');
+                        }
+                    }
+                }, {passive: false});
+
+                dragHandle.addEventListener('touchend', function(e) {
+                    li.classList.remove('dragging');
+                    const touch = e.changedTouches[0];
+                    const elem = document.elementFromPoint(touch.clientX, touch.clientY);
+                    
+                    document.querySelectorAll('.draggable-li').forEach(item => item.classList.remove('drag-over-target'));
+                    if (elem) {
+                        const targetLi = elem.closest('li.draggable-li');
+                        if (targetLi && targetLi.dataset.key !== draggedWordKey) {
+                            mergeWords(draggedWordKey, targetLi.dataset.key);
+                        }
+                    }
+                    draggedWordKey = null;
+                });
+
+                const displayInput = document.createElement('input');
+                displayInput.type = 'text';
+                displayInput.className = 'word-title-input';
+                displayInput.value = item.displayWord;
+                displayInput.title = "터치하여 단어 형태를 동사원형 등으로 수정할 수 있습니다.";
+                displayInput.addEventListener('input', (e) => {
+                    savedWords[key].displayWord = e.target.value;
+                    saveData();
+                    generatePrintLayout('all');
+                });
+
+                const actions = document.createElement('div');
+                actions.className = 'word-actions';
+
+                const dictBtn = document.createElement('a');
+                dictBtn.href = `https://en.dict.naver.com/#/search?query=${encodeURIComponent(item.displayWord)}`;
+                dictBtn.target = '_blank';
+                dictBtn.className = 'btn btn-dict';
+                dictBtn.innerText = '사전';
+                dictBtn.addEventListener('mousedown', () => {
+                    dictBtn.href = `https://en.dict.naver.com/#/search?query=${encodeURIComponent(savedWords[key].displayWord)}`;
+                });
+
+                const delBtn = document.createElement('button');
+                delBtn.className = 'btn btn-delete';
+                delBtn.innerText = '삭제';
+                delBtn.onclick = () => {
+                    delete savedWords[key];
+                    
+                    Object.keys(highlights).forEach(spanId => {
+                        if (highlights[spanId].vocabKey === key) {
+                            delete highlights[spanId];
+                        }
+                    });
+
+                    saveData();
+                    updateVocabulary();
+                    updateHighlights();
+                };
+
+                actions.appendChild(dictBtn);
+                actions.appendChild(delBtn);
+
+                topRow.appendChild(dragHandle); 
+                topRow.appendChild(displayInput);
+                topRow.appendChild(actions);
+
+                const meaningInput = document.createElement('input');
+                meaningInput.type = 'text';
+                meaningInput.id = 'word-input-' + key.replace(/\s+/g, '-');
+                meaningInput.className = 'meaning-input';
+                meaningInput.placeholder = '사전에서 복사한 뜻 붙여넣기';
+                meaningInput.value = mean;
+                meaningInput.addEventListener('input', (e) => {
+                    savedWords[key].mean = e.target.value;
+                    saveData();
+                    generatePrintLayout('all');
+                });
+
+                li.appendChild(topRow);
+                li.appendChild(meaningInput);
+                list.appendChild(li);
+            });
+            
+            generatePrintLayout('all');
+        }
+
+        function generatePrintLayout(mode = 'all') {
+            const printArea = document.getElementById('print-area');
+            const wordsArr = Object.keys(savedWords).map(k => ({ 
+                key: k, 
+                word: savedWords[k].displayWord, 
+                mean: savedWords[k].mean 
+            }));
+            const totalWords = wordsArr.length;
+            
+            if (totalWords === 0) { printArea.innerHTML = ''; return; }
+
+            const maxRowsPerPage = 42;
+            const maxWordsPerPage = maxRowsPerPage * 2;
+            const totalPages = Math.ceil(totalWords / maxWordsPerPage);
+            let printHtml = '';
+
+            let printTitle = "📝 내신대비 나만의 영단어장";
+            if (mode === 'meaning_test') printTitle = "📝 영단어 [뜻] 쓰기 시험지";
+            if (mode === 'word_test') printTitle = "📝 [영어 단어] 쓰기 시험지";
+
+            for (let p = 0; p < totalPages; p++) {
+                let leftRows = ''; let rightRows = '';
+                const pageStartIndex = p * maxWordsPerPage;
+                const wordsOnThisPage = Math.min(totalWords - pageStartIndex, maxWordsPerPage);
+                const actualRowsThisPage = Math.ceil(wordsOnThisPage / 2);
+
+                for (let r = 0; r < actualRowsThisPage; r++) {
+                    let lItem = wordsArr[pageStartIndex + r] || { word: '', mean: '' };
+                    let lWord = mode === 'word_test' ? '&nbsp;' : lItem.word;
+                    let lMean = mode === 'meaning_test' ? '&nbsp;' : lItem.mean;
+                    leftRows += `<tr><td class="col-eng">${lWord}</td><td class="col-kor">${lMean}</td></tr>`;
+
+                    let rItem = wordsArr[pageStartIndex + actualRowsThisPage + r] || { word: '', mean: '' };
+                    let rWord = mode === 'word_test' ? '&nbsp;' : rItem.word;
+                    let rMean = mode === 'meaning_test' ? '&nbsp;' : rItem.mean;
+                    rightRows += `<tr><td class="col-eng">${rWord}</td><td class="col-kor">${rMean}</td></tr>`;
+                }
+
+                printHtml += `
+                <div class="print-page">
+                    <div class="print-header">
+                        <span class="print-header-title">${printTitle}</span>
+                        <span class="print-header-sub">PDF/출력 제공본 (Page ${p + 1} / ${totalPages})</span>
+                    </div>
+                    <div class="print-table-wrapper">
+                        <table class="print-table">
+                            <thead><tr><th class="col-eng">English</th><th class="col-kor">Korean</th></tr></thead>
+                            <tbody>${leftRows}</tbody>
+                        </table>
+                        <table class="print-table">
+                            <thead><tr><th class="col-eng">English</th><th class="col-kor">Korean</th></tr></thead>
+                            <tbody>${rightRows}</tbody>
+                        </table>
+                    </div>
+                </div>`;
+            }
+            printArea.innerHTML = printHtml;
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const article = document.getElementById('article-container');
+            const btn = document.getElementById('toggle-sidebar-btn');
+            sidebar.classList.toggle('hidden');
+            article.classList.toggle('full-width');
+            if (sidebar.classList.contains('hidden')) { btn.innerText = "📖 단어장 보기"; document.getElementById('resizer').style.display = 'none'; } 
+            else { btn.innerText = "👁️ 단어장 숨기기"; document.getElementById('resizer').style.display = 'block'; }
+        }
+
+        function printPDF(mode) {
+            if (Object.keys(savedWords).length === 0) {
+                alert("인쇄할 단어가 없습니다. 먼저 지문에서 단어를 추가해주세요!"); return;
+            }
+            generatePrintLayout(mode); 
+            requestAnimationFrame(() => { setTimeout(() => { window.print(); }, 300); });
+        }
+
+        function exportData() {
+            if (Object.keys(savedWords).length === 0) { alert("백업할 단어가 없습니다!"); return; }
+            
+            const backupObj = {
+                version: 2,
+                vocab: savedWords,
+                highlights: highlights
+            };
+
+            const blob = new Blob([JSON.stringify(backupObj, null, 2)], { type: "application/json;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = '단어장_백업_v2.json';
+            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+        }
+
+        function parseBackupData(rawText) {
+            try {
+                const parsed = JSON.parse(rawText);
+                
+                if (parsed && parsed.version === 2 && parsed.vocab) {
+                    let migratedVocab = {};
+                    for (let key in parsed.vocab) {
+                        let item = parsed.vocab[key];
+                        if (typeof item === 'string') {
+                            migratedVocab[key] = { displayWord: key, mean: item };
+                        } else {
+                            migratedVocab[key] = item;
+                        }
+                    }
+                    return {
+                        vocab: migratedVocab,
+                        highlights: parsed.highlights || {}
+                    };
+                }
+
+                let migratedVocab = {};
+                if (parsed && typeof parsed === 'object') {
+                    for (let key in parsed) {
+                        let item = parsed[key];
+                        if (typeof item === 'string') {
+                            migratedVocab[key] = { displayWord: key, mean: item };
+                        } else if (item && typeof item === 'object' && item.displayWord) {
+                            migratedVocab[key] = item;
+                        }
+                    }
+                }
+                return {
+                    vocab: migratedVocab,
+                    highlights: {} 
+                };
+
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function importData(event) {
+            const file = event.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const parsedResult = parseBackupData(e.target.result);
+                if (parsedResult) {
+                    if (Object.keys(savedWords).length > 0) {
+                        if (confirm("기존 단어장에 추가(병합)하시겠습니까?")) {
+                            Object.assign(savedWords, parsedResult.vocab);
+                            Object.assign(highlights, parsedResult.highlights);
+                        } else {
+                            savedWords = parsedResult.vocab;
+                            highlights = parsedResult.highlights;
+                        }
+                    } else {
+                        savedWords = parsedResult.vocab;
+                        highlights = parsedResult.highlights;
+                    }
+                    saveData();
+                    updateVocabulary(); 
+                    updateHighlights(); 
+                    alert("✅ 불러오기 및 데이터 복원 완료!");
+                } else { 
+                    alert("❌ 잘못된 백업 파일 형식입니다."); 
+                }
+            };
+            reader.readAsText(file); event.target.value = ""; 
+        }
+
+        function clearAllWords() {
+            if(confirm("단어장과 본문 형광펜을 모두 비우시겠습니까?")) { 
+                savedWords = {}; 
+                highlights = {};
+                saveData();
+                updateVocabulary(); 
+                updateHighlights(); 
+            }
+        }
+
+        function focusOnWord(wordKey) {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.classList.contains('hidden')) toggleSidebar();
+            if (currentFilter !== 'all') setFilter('all');
+            
+            setTimeout(() => {
+                const targetLi = document.getElementById('word-item-' + wordKey.replace(/\s+/g, '-'));
+                const targetInput = document.getElementById('word-input-' + wordKey.replace(/\s+/g, '-'));
+                if (targetLi && targetInput) {
+                    targetLi.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetInput.focus();
+                    targetLi.style.transition = 'all 0.3s ease';
+                    targetLi.style.border = '2px solid #ff922b';
+                    targetLi.style.backgroundColor = '#fff4e6';
+                    setTimeout(() => { targetLi.style.border = '2px solid transparent'; targetLi.style.backgroundColor = '#ffffff'; }, 1000);
+                } else {
+                    sidebar.scrollTo({ top: sidebar.scrollHeight, behavior: 'smooth' });
+                }
+            }, 150);
+        }
+
+        document.getElementById('article-container').addEventListener('click', function(e) {
+            if (window.getSelection().toString().trim().length > 0) return;
+
+            if (e.target.classList.contains('word')) {
+                const spanId = e.target.getAttribute('data-id');
+                let clickedWord = e.target.innerText.toLowerCase().replace(/^[^a-z]+|[^a-z]+$/g, '');
+                
+                if (clickedWord && spanId) {
+                    if (highlights[spanId]) {
+                        delete highlights[spanId];
+                    } else {
+                        highlights[spanId] = {
+                            type: 'single',
+                            vocabKey: clickedWord
+                        };
+                        if (!(clickedWord in savedWords)) {
+                            savedWords[clickedWord] = { displayWord: clickedWord, mean: "" };
+                        }
+                    }
+                    saveData();
+                    updateVocabulary();
+                    updateHighlights();
+                    
+                    if (highlights[spanId]) {
+                        focusOnWord(clickedWord);
+                    }
+                }
+            }
+        });
+
+        const addPhraseBtn = document.getElementById('add-phrase-btn');
+        let currentSelectedPhrase = "";
+
+        document.addEventListener('selectionchange', () => {
+            const selection = window.getSelection();
+            const text = selection.toString().trim();
+            let cleanedPhrase = text.toLowerCase().replace(/[^a-z\s\-]/g, '').replace(/\s+/g, ' ').trim();
+
+            if (cleanedPhrase.includes(' ') && cleanedPhrase.length > 3) {
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                
+                addPhraseBtn.style.display = 'block';
+                addPhraseBtn.style.top = Math.max(10, rect.top - 50) + 'px';
+                addPhraseBtn.style.left = (rect.left + (rect.width / 2)) + 'px';
+                
+                currentSelectedPhrase = cleanedPhrase;
+                tempSelectedSpans = getSelectedWordSpans(selection);
+            } else {
+                addPhraseBtn.style.display = 'none';
+            }
+        });
+
+        addPhraseBtn.addEventListener('mousedown', (e) => {
+            e.preventDefault(); 
+            if (currentSelectedPhrase && tempSelectedSpans.length > 0) {
+                if (!(currentSelectedPhrase in savedWords)) {
+                    savedWords[currentSelectedPhrase] = { displayWord: currentSelectedPhrase, mean: "" };
+                }
+
+                tempSelectedSpans.forEach(span => {
+                    const spanId = span.getAttribute('data-id');
+                    if (spanId) {
+                        highlights[spanId] = {
+                            type: 'phrase',
+                            vocabKey: currentSelectedPhrase
+                        };
+                    }
+                });
+
+                saveData();
+                updateVocabulary();
+                updateHighlights();
+                
+                window.getSelection().removeAllRanges();
+                addPhraseBtn.style.display = 'none';
+                focusOnWord(currentSelectedPhrase);
+            }
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            if(e.target !== addPhraseBtn && window.getSelection().toString().trim().length === 0) {
+                addPhraseBtn.style.display = 'none';
+            }
+        });
+
+        const resizer = document.getElementById('resizer');
+        const leftSide = document.getElementById('article-container');
+        const rightSide = document.getElementById('sidebar');
+        let startX = 0; let leftFlex = 5.5; let rightFlex = 4.5;
+
+        const mouseDownHandler = function(e) {
+            startX = e.clientX || (e.touches && e.touches[0].clientX);
+            leftSide.style.transition = 'none'; rightSide.style.transition = 'none';
+            document.addEventListener('mousemove', mouseMoveHandler); document.addEventListener('mouseup', mouseUpHandler);
+            document.addEventListener('touchmove', mouseMoveHandler, { passive: false }); document.addEventListener('touchend', mouseUpHandler);
+        };
+        const mouseMoveHandler = function(e) {
+            const currentX = e.clientX || (e.touches && e.touches[0].clientX);
+            const dx = currentX - startX; const containerWidth = document.body.getBoundingClientRect().width;
+            const deltaFlex = (dx / containerWidth) * 10;
+            let newLeftFlex = leftFlex + deltaFlex; let newRightFlex = rightFlex - deltaFlex;
+            if (newLeftFlex < 2) { newLeftFlex = 2; newRightFlex = 8; }
+            if (newRightFlex < 2) { newRightFlex = 2; newLeftFlex = 8; }
+            leftSide.style.flex = newLeftFlex; rightSide.style.flex = newRightFlex;
+            if (e.type === 'touchmove') e.preventDefault();
+        };
+        const mouseUpHandler = function() {
+            leftFlex = parseFloat(leftSide.style.flex) || leftFlex; rightFlex = parseFloat(rightSide.style.flex) || rightFlex;
+            leftSide.style.transition = 'flex 0.3s ease'; rightSide.style.transition = 'all 0.3s ease';
+            document.removeEventListener('mousemove', mouseMoveHandler); document.removeEventListener('mouseup', mouseUpHandler);
+            document.removeEventListener('touchmove', mouseMoveHandler); document.removeEventListener('touchend', mouseUpHandler);
+        };
+        resizer.addEventListener('mousedown', mouseDownHandler); resizer.addEventListener('touchstart', mouseDownHandler);
+
+        window.onload = () => { changeLesson(); updateVocabulary(); };
+    </script>
+</body>
+</html>        /* 🌟 드래그 크기 조절바 스타일 */
+        #resizer {
+            width: 8px;
+            background-color: #e9ecef;
+            cursor: col-resize;
+            transition: background-color 0.2s;
+            z-index: 20;
+        }
+        #resizer:hover, #resizer:active {
+            background-color: #adb5bd;
+        }
+
+        /* 상단 컨트롤 영역 */
+        .top-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .lesson-selector {
+            flex: 1;
+            padding: 12px 15px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #343a40;
+            background-color: #f1f3f5;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .lesson-selector:focus { border-color: #339af0; }
+        .toggle-btn {
+            background-color: #e9ecef;
+            color: #495057;
+            border: 2px solid #dee2e6;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.05rem;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .toggle-btn:hover { background-color: #dee2e6; }
+        .toggle-btn.active { background-color: #343a40; color: white; border-color: #343a40; }
+        
+        #article-title { color: #2c3e50; font-size: 2rem; margin-bottom: 25px; line-height: 1.3; word-break: keep-all; }
+        .eng-sentence { line-height: 1.8; font-size: 1.3rem; color: #212529; font-weight: 600; margin: 0 0 5px 0; }
+        .kor-trans { line-height: 1.5; font-size: 1.05rem; color: #868e96; margin: 0 0 25px 0; word-break: keep-all; transition: all 0.3s; }
+        body.hide-kor .kor-trans { display: none !important; }
+        body.hide-kor .eng-sentence { margin-bottom: 20px; }
+        
+        #sidebar {
+            flex: 4.5;
+            padding: 30px;
+            background-color: #f1f3f5;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        #sidebar.hidden { display: none !important; }
+        #sidebar h2 { color: #343a40; font-size: 1.8rem; margin-top: 0; border-bottom: 3px solid #adb5bd; padding-bottom: 15px; margin-bottom: 15px; }
+        
+        .guide-text { font-size: 1rem; color: #495057; background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 15px; word-break: keep-all; line-height:1.5;}
+        
+        .filter-controls { display: flex; gap: 10px; margin-bottom: 15px; }
+        .filter-btn { background-color: #e9ecef; color: #495057; padding: 10px; font-size: 0.95rem; flex: 1; transition: all 0.2s; border:none; border-radius:8px; cursor:pointer; font-weight:bold;}
+        .filter-btn:hover { background-color: #dee2e6; }
+        .filter-btn.active { background-color: #343a40; color: white; }
+
+        .word { cursor: pointer; transition: all 0.2s; border-radius: 4px; padding: 2px 4px; }
+        .word:hover { background-color: #e9ecef; }
+        
         /* 🌟 형광펜 스타일 */
         .highlighted { background-color: #ffe066 !important; color: #d9480f !important; font-weight: bold; }
         /* 합쳐진 단어(숙어)를 위한 빨간색 형광펜 추가 */
