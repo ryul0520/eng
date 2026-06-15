@@ -8,139 +8,440 @@
         /* ================= 화면(스크린) 전용 스타일 ================= */
         body {
             font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
-            margin: 0; padding: 0; display: flex; height: 100vh;
-            background-color: #f8f9fa; overflow: hidden; transition: all 0.3s;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #f8f9fa;
+            overflow: hidden;
+            transition: all 0.3s;
         }
-
         #article-container {
-            flex: 5.5; padding: 30px 40px; overflow-y: auto; -webkit-overflow-scrolling: touch;
-            background-color: #ffffff; box-shadow: 3px 0 10px rgba(0,0,0,0.05); z-index: 10; transition: flex 0.3s ease;
+            flex: 5.5;
+            padding: 30px 40px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background-color: #ffffff;
+            box-shadow: 3px 0 10px rgba(0,0,0,0.05);
+            z-index: 10;
+            transition: flex 0.3s ease;
         }
-        
-        #article-container.full-width { flex: 10 !important; padding: 30px 10%; }
-        
+        #article-container.full-width {
+            flex: 10 !important;
+            padding: 30px 10%;
+        }
         /* 상단 컨트롤 영역 (드롭다운 + 해석 숨기기 버튼) */
-        .top-controls { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; }
-        
+        .top-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
         .lesson-selector {
-            flex: 1; padding: 12px 15px; font-size: 1.15rem; font-weight: bold;
-            color: #343a40; background-color: #f1f3f5; border: 2px solid #dee2e6;
-            border-radius: 8px; cursor: pointer; outline: none; transition: border-color 0.2s;
+            flex: 1;
+            padding: 12px 15px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #343a40;
+            background-color: #f1f3f5;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
         }
-        .lesson-selector:focus { border-color: #339af0; }
-
+        .lesson-selector:focus {
+            border-color: #339af0;
+        }
         .toggle-btn {
-            background-color: #e9ecef; color: #495057; border: 2px solid #dee2e6;
-            padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;
-            font-size: 1.05rem; white-space: nowrap; transition: all 0.2s;
+            background-color: #e9ecef;
+            color: #495057;
+            border: 2px solid #dee2e6;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.05rem;
+            white-space: nowrap;
+            transition: all 0.2s;
         }
-        .toggle-btn:hover { background-color: #dee2e6; }
-        .toggle-btn.active { background-color: #343a40; color: white; border-color: #343a40; }
-
-        #article-container h1 { color: #2c3e50; font-size: 2rem; margin-bottom: 25px; line-height: 1.3; word-break: keep-all; }
-        
-        /* 지문 본문 및 한줄 해석 스타일 */
-        .eng-sentence { line-height: 1.8; font-size: 1.3rem; color: #212529; font-weight: 600; margin: 0 0 5px 0; }
-        .kor-trans { line-height: 1.5; font-size: 1.05rem; color: #868e96; margin: 0 0 25px 0; word-break: keep-all; transition: all 0.3s; }
-        
-        /* 해석 숨기기 상태일 때 적용되는 클래스 */
-        body.hide-kor .kor-trans { display: none !important; }
-        body.hide-kor .eng-sentence { margin-bottom: 20px; }
-
+        .toggle-btn:hover {
+            background-color: #dee2e6;
+        }
+        .toggle-btn.active {
+            background-color: #343a40;
+            color: white;
+            border-color: #343a40;
+        }
+        #article-title {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            line-height: 1.3;
+            word-break: keep-all;
+        }
+        .eng-sentence {
+            line-height: 1.8;
+            font-size: 1.3rem;
+            color: #212529;
+            font-weight: 600;
+            margin: 0 0 5px 0;
+        }
+        .kor-trans {
+            line-height: 1.5;
+            font-size: 1.05rem;
+            color: #868e96;
+            margin: 0 0 25px 0;
+            word-break: keep-all;
+            transition: all 0.3s;
+        }
+        body.hide-kor .kor-trans {
+            display: none !important;
+        }
+        body.hide-kor .eng-sentence {
+            margin-bottom: 20px;
+        }
         #sidebar {
-            flex: 4.5; padding: 30px; background-color: #f1f3f5; overflow-y: auto;
-            -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; transition: all 0.3s ease;
+            flex: 4.5;
+            padding: 30px;
+            background-color: #f1f3f5;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        #sidebar.hidden {
+            display: none !important;
+        }
+        #sidebar h2 {
+            color: #343a40;
+            font-size: 1.8rem;
+            margin-top: 0;
+            border-bottom: 3px solid #adb5bd;
+            padding-bottom: 15px;
+        }
+        .guide-text {
+            font-size: 1.05rem;
+            color: #495057;
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            word-break: keep-all;
+        }
+        
+        /* 필터 버튼 영역 */
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .filter-btn {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 10px;
+            font-size: 0.95rem;
+            flex: 1;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover {
+            background-color: #dee2e6;
+        }
+        .filter-btn.active {
+            background-color: #343a40;
+            color: white;
         }
 
-        #sidebar.hidden { display: none !important; }
-        #sidebar h2 { color: #343a40; font-size: 1.8rem; margin-top: 0; border-bottom: 3px solid #adb5bd; padding-bottom: 15px; }
-        .guide-text { font-size: 1.05rem; color: #495057; background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px; word-break: keep-all; }
+        .word {
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+            padding: 2px 4px;
+        }
+        .word:hover {
+            background-color: #e9ecef;
+        }
+        .highlighted {
+            background-color: #ffe066 !important;
+            color: #d9480f !important;
+            font-weight: bold;
+        }
+        #word-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+        #word-list li {
+            background: #ffffff;
+            margin-bottom: 15px;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .word-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .word-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #212529;
+        }
+        .meaning-input {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1.1rem;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .meaning-input:focus {
+            outline: none;
+            border-color: #339af0;
+            box-shadow: 0 0 0 3px rgba(51, 154, 240, 0.2);
+        }
+        .word-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .sidebar-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        .action-row {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            flex: 1;
+            transition: filter 0.2s;
+        }
+        .btn:active {
+            filter: brightness(0.9);
+        }
+        
+        /* 사전 검색 및 삭제 버튼 색상 복구 */
+        .btn-dict {
+            background-color: #03c75a; /* 초록색 */
+            color: white;
+        }
+        .btn-delete {
+            background-color: #fa5252; /* 빨간색 */
+            color: white;
+        }
 
-        .word { cursor: pointer; transition: all 0.2s; border-radius: 4px; padding: 2px 4px; }
-        .word:hover { background-color: #e9ecef; }
-        .highlighted { background-color: #ffe066 !important; color: #d9480f !important; font-weight: bold; }
-
-        #word-list { list-style-type: none; padding: 0; margin: 0; flex-grow: 1; }
-        #word-list li { background: #ffffff; margin-bottom: 15px; padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 12px; }
-
-        .word-top-row { display: flex; justify-content: space-between; align-items: center; }
-        .word-title { font-size: 1.4rem; font-weight: 800; color: #212529; }
-        .meaning-wrapper { width: 100%; }
-        .meaning-input { width: 100%; padding: 12px 15px; font-size: 1.1rem; border: 2px solid #dee2e6; border-radius: 8px; box-sizing: border-box; transition: border-color 0.2s; }
-        .meaning-input:focus { outline: none; border-color: #339af0; box-shadow: 0 0 0 3px rgba(51, 154, 240, 0.2); }
-
-        .word-actions { display: flex; gap: 10px; }
-        .sidebar-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; }
-        .action-row { display: flex; gap: 10px; }
-
-        .btn { border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; text-decoration: none; display: inline-block; text-align: center; flex: 1; transition: filter 0.2s; }
-        .btn:active { filter: brightness(0.9); }
-        .btn-dict { background-color: #03c75a; color: white; }
-        .btn-delete { background-color: #fa5252; color: white; }
-        .btn-pdf { background-color: #e03131; color: white; padding: 15px; font-size: 1.15rem; width: 100%; margin-bottom: 10px;}
-        .btn-export { background-color: #6741d9; color: white; padding: 15px; font-size: 1rem; }
-        .btn-import { background-color: #f59f00; color: white; padding: 15px; font-size: 1rem; }
-        .btn-clear { background-color: #868e96; color: white; padding: 15px; font-size: 1.1rem; }
-
-        #toggle-sidebar-btn { position: fixed; bottom: 30px; right: 30px; background-color: #343a40; color: white; border: none; padding: 15px 25px; border-radius: 30px; font-size: 1.1rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; z-index: 1000; transition: transform 0.2s; }
-        #toggle-sidebar-btn:active { transform: scale(0.95); }
-
-        #print-area { display: none; }
-
+        /* 인쇄 컨트롤 영역 스타일 */
+        .print-control-box {
+            background: #dee2e6;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .print-control-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #343a40;
+            margin-bottom: 5px;
+        }
+        .btn-pdf {
+            background-color: #e03131;
+            color: white;
+            padding: 12px;
+            font-size: 1.1rem;
+        }
+        .btn-test-mean {
+            background-color: #1c7ed6;
+            color: white;
+            padding: 12px;
+            font-size: 1.05rem;
+        }
+        .btn-test-word {
+            background-color: #f06595;
+            color: white;
+            padding: 12px;
+            font-size: 1.05rem;
+        }
+        .btn-export {
+            background-color: #6741d9;
+            color: white;
+            padding: 15px;
+            font-size: 1rem;
+        }
+        .btn-import {
+            background-color: #f59f00;
+            color: white;
+            padding: 15px;
+            font-size: 1rem;
+        }
+        .btn-clear {
+            background-color: #868e96;
+            color: white;
+            padding: 15px;
+            font-size: 1.1rem;
+        }
+        #toggle-sidebar-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #343a40;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.2s;
+        }
+        #toggle-sidebar-btn:active {
+            transform: scale(0.95);
+        }
+        #print-area {
+            display: none;
+        }
         @media (max-width: 900px) and (orientation: portrait) {
-            body { flex-direction: column; overflow: auto; }
-            #article-container { flex: none; height: auto; padding: 20px; box-shadow: none; }
-            .top-controls { flex-direction: column; }
-            #sidebar { flex: none; height: auto; padding: 20px; }
-            #toggle-sidebar-btn { bottom: 20px; right: 20px; padding: 12px 20px; font-size: 1rem; }
+            body {
+                flex-direction: column;
+                overflow: auto;
+            }
+            #article-container {
+                flex: none;
+                height: auto;
+                padding: 20px;
+                box-shadow: none;
+            }
+            .top-controls {
+                flex-direction: column;
+            }
+            #sidebar {
+                flex: none;
+                height: auto;
+                padding: 20px;
+            }
+            #toggle-sidebar-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
         }
 
         /* ================= PDF 인쇄 전용 스타일 (한 장에 최대한 많이!) ================= */
         @media print {
-            body { display: block; background: white; overflow: visible; height: auto; margin: 0; font-family: 'Malgun Gothic', sans-serif; }
-            #article-container, #sidebar, #toggle-sidebar-btn { display: none !important; }
-            #print-area { display: block; width: 100%; }
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            
-            .print-page { page-break-after: always; padding: 0; } /* 여백 최소화 */
-            .print-page:last-child { page-break-after: avoid; }
-            
-            .print-header { 
-                border-top: 2px solid #3b4252; border-bottom: 2px solid #d8dee9; 
-                padding: 8px 10px; margin-bottom: 12px; display: flex; 
-                justify-content: space-between; align-items: center; color: #4c566a; 
+            body {
+                display: block;
+                background: white;
+                overflow: visible;
+                height: auto;
+                margin: 0;
+                font-family: 'Malgun Gothic', sans-serif;
             }
-            .print-header-title { font-size: 13pt; font-weight: 900; letter-spacing: 1px; color: #2c3e50; }
-            .print-header-sub { font-size: 10pt; color: #81a1c1; }
-            
-            .print-table-wrapper { display: flex; justify-content: space-between; gap: 3%; }
-            .print-table { width: 48.5%; border-collapse: collapse; table-layout: fixed; }
-            
-            /* 패딩과 폰트 크기를 줄여 한 장에 40줄 이상 들어가게 만듦 */
-            .print-table th, .print-table td { 
-                border: 1px solid #c8d0e0; 
-                padding: 4px 6px; 
-                vertical-align: middle; 
-                font-size: 10pt; 
-                height: 22px; 
+            #article-container, #sidebar, #toggle-sidebar-btn {
+                display: none !important;
             }
-            .print-table th { 
-                background-color: #f4f6f9; color: #2e3440; font-weight: bold; 
-                text-align: center; border-top: 2px solid #81a1c1; border-bottom: 2px solid #81a1c1; 
-                padding: 6px 0; font-size: 10.5pt;
+            #print-area {
+                display: block;
+                width: 100%;
             }
-            
-            .col-eng { width: 38%; font-weight: bold; color: #212529; word-wrap: break-word; word-break: break-word; }
-            .col-kor { width: 62%; color: #343a40; word-wrap: break-word; word-break: break-all; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .print-page {
+                page-break-after: always;
+                padding: 0;
+            }
+            .print-page:last-child {
+                page-break-after: avoid;
+            }
+            .print-header {
+                border-top: 2px solid #3b4252;
+                border-bottom: 2px solid #d8dee9;
+                padding: 8px 10px;
+                margin-bottom: 12px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: #4c566a;
+            }
+            .print-header-title {
+                font-size: 13pt;
+                font-weight: 900;
+                letter-spacing: 1px;
+                color: #2c3e50;
+            }
+            .print-header-sub {
+                font-size: 10pt;
+                color: #81a1c1;
+            }
+            .print-table-wrapper {
+                display: flex;
+                justify-content: space-between;
+                gap: 3%;
+            }
+            .print-table {
+                width: 48.5%;
+                border-collapse: collapse;
+                table-layout: fixed;
+            }
+            .print-table th, .print-table td {
+                border: 1px solid #c8d0e0;
+                padding: 4px 6px;
+                vertical-align: middle;
+                font-size: 10pt;
+                height: 26px;
+            }
+            .print-table th {
+                background-color: #f4f6f9;
+                color: #2e3440;
+                font-weight: bold;
+                text-align: center;
+                border-top: 2px solid #81a1c1;
+                border-bottom: 2px solid #81a1c1;
+                padding: 6px 0;
+                font-size: 10.5pt;
+            }
+            .col-eng {
+                width: 38%;
+                font-weight: bold;
+                color: #212529;
+                word-wrap: break-word;
+                word-break: break-word;
+            }
+            .col-kor {
+                width: 62%;
+                color: #343a40;
+                word-wrap: break-word;
+                word-break: break-all;
+            }
         }
     </style>
 </head>
 <body>
-
     <button id="toggle-sidebar-btn" onclick="toggleSidebar()">👁️ 단어장 숨기기</button>
-
     <div id="article-container">
-        <!-- 상단 컨트롤 (드롭다운 & 해석버튼) -->
         <div class="top-controls">
             <select id="lesson-select" class="lesson-selector" onchange="changeLesson()">
                 <option value="lesson3_main">📖 3과 본문 (Child Prodigies)</option>
@@ -149,24 +450,37 @@
             </select>
             <button id="toggle-kor-btn" class="toggle-btn" onclick="toggleTranslation()">🙈 해석 숨기기</button>
         </div>
-
         <h1 id="article-title"></h1>
         <div id="text-content"></div>
     </div>
-
+    
     <div id="sidebar">
         <h2>📚 나의 단어장</h2>
         <div class="guide-text">
             ✍️ <b>사용 방법:</b><br>
-            1. 지문에서 모르는 <b>영단어</b>를 터치하세요.<br>
+            1. <b>제목이나 지문</b>에서 모르는 <b>영단어</b>를 터치하세요.<br>
             2. <b>[사전 검색]</b> 버튼으로 뜻을 찾아 붙여넣으세요.<br>
-            3. <b>[📄 PDF로 저장]</b> 버튼을 누르면 학원 교재 스타일로 빽빽하게 출력됩니다!
+            3. <b>[시험지 출력]</b> 버튼으로 나만의 테스트지를 만들어보세요!
         </div>
-        
+
+        <!-- 🌟 단어 미입력/입력 필터 버튼 -->
+        <div class="filter-controls">
+            <button class="btn filter-btn active" onclick="setFilter('all')" id="filter-all">전체 단어</button>
+            <button class="btn filter-btn" onclick="setFilter('empty')" id="filter-empty">뜻 미입력</button>
+            <button class="btn filter-btn" onclick="setFilter('filled')" id="filter-filled">뜻 입력완료</button>
+        </div>
+
         <ul id="word-list"></ul>
         
         <div class="sidebar-actions">
-            <button class="btn btn-pdf" onclick="saveAsPDF()">📄 단어장 PDF / 종이 인쇄</button>
+            <div class="print-control-box">
+                <div class="print-control-title">🖨️ 인쇄 / 시험지 출력</div>
+                <button class="btn btn-pdf" onclick="printPDF('all')">📄 전체 단어장 인쇄</button>
+                <div class="action-row">
+                    <button class="btn btn-test-mean" onclick="printPDF('meaning_test')">📝 뜻 쓰기 시험지</button>
+                    <button class="btn btn-test-word" onclick="printPDF('word_test')">📝 단어 쓰기 시험지</button>
+                </div>
+            </div>
             <div class="action-row">
                 <button class="btn btn-export" onclick="exportData()">📤 데이터 백업</button>
                 <button class="btn btn-import" onclick="document.getElementById('import-file').click()">📥 백업 불러오기</button>
@@ -175,11 +489,9 @@
             <button class="btn btn-clear" onclick="clearAllWords()">🗑️ 단어장 전체 비우기</button>
         </div>
     </div>
-
     <div id="print-area"></div>
 
     <script>
-        // 지문 데이터베이스
         const textDB = {
             "lesson3_main": {
                 title: "Child Prodigies: Myths and Misunderstandings",
@@ -503,14 +815,13 @@ Only then will we truly have the power over our thoughts that Descartes believed
         };
 
         let savedWords = JSON.parse(localStorage.getItem('myVocabDictionary')) || {};
-        let isKorHidden = false; // 해석 숨김 상태 변수
+        let isKorHidden = false;
+        let currentFilter = 'all'; // 전체, 미입력, 입력 필터 상태 저장
 
-        // 해석 보기/숨기기 토글 함수
         function toggleTranslation() {
             isKorHidden = !isKorHidden;
             document.body.classList.toggle('hide-kor', isKorHidden);
             const btn = document.getElementById('toggle-kor-btn');
-            
             if(isKorHidden) {
                 btn.innerText = "👁️ 해석 보기";
                 btn.classList.add('active');
@@ -520,31 +831,26 @@ Only then will we truly have the power over our thoughts that Descartes believed
             }
         }
 
-        // 탭(드롭다운) 변경 시 실행되는 함수
         function changeLesson() {
             const lessonKey = document.getElementById('lesson-select').value;
             renderText(lessonKey);
         }
 
-        // 영어 문장과 한글 해석을 분리하여 렌더링하는 함수
         function renderText(lessonKey = "lesson3_main") {
             const container = document.getElementById('text-content');
             const titleEle = document.getElementById('article-title');
-            
             const currentData = textDB[lessonKey];
-            titleEle.innerText = currentData.title;
+            
+            const titleWrapped = currentData.title.replace(/([a-zA-Z\-]+)/g, '<span class="word">$1</span>');
+            titleEle.innerHTML = titleWrapped;
 
-            // 줄바꿈 기준으로 문장 쪼개기
             const lines = currentData.content.trim().split('\n');
             let htmlContent = '';
-            
             lines.forEach(line => {
                 line = line.trim();
                 if (!line) return;
 
-                // 정규식: 한글이 하나라도 포함되어 있으면 한글 해석으로 인식
                 const isKorean = /[가-힣]/.test(line);
-
                 if (isKorean) {
                     htmlContent += `<p class="kor-trans">${line}</p>`;
                 } else {
@@ -552,7 +858,6 @@ Only then will we truly have the power over our thoughts that Descartes believed
                     htmlContent += `<p class="eng-sentence">${wrappedText}</p>`;
                 }
             });
-
             container.innerHTML = htmlContent;
             updateHighlights();
         }
@@ -565,16 +870,32 @@ Only then will we truly have the power over our thoughts that Descartes believed
             });
         }
 
+        // 필터 상태 변경 함수
+        function setFilter(filterType) {
+            currentFilter = filterType;
+            document.getElementById('filter-all').classList.remove('active');
+            document.getElementById('filter-empty').classList.remove('active');
+            document.getElementById('filter-filled').classList.remove('active');
+            document.getElementById(`filter-${filterType}`).classList.add('active');
+            updateVocabulary();
+        }
+
         function updateVocabulary() {
             const list = document.getElementById('word-list');
             list.innerHTML = '';
             localStorage.setItem('myVocabDictionary', JSON.stringify(savedWords));
 
             Object.keys(savedWords).forEach(word => {
+                const mean = savedWords[word] || '';
+
+                // 필터링 적용
+                if (currentFilter === 'empty' && mean.trim() !== '') return;
+                if (currentFilter === 'filled' && mean.trim() === '') return;
+
                 const li = document.createElement('li');
                 const topRow = document.createElement('div');
                 topRow.className = 'word-top-row';
-                
+
                 const titleDiv = document.createElement('div');
                 titleDiv.className = 'word-title';
                 titleDiv.innerText = word;
@@ -584,64 +905,87 @@ Only then will we truly have the power over our thoughts that Descartes believed
 
                 const dictBtn = document.createElement('a');
                 dictBtn.href = `https://en.dict.naver.com/#/search?query=${word}`;
-                dictBtn.target = '_blank'; dictBtn.className = 'btn btn-dict'; dictBtn.innerText = '사전 검색';
-                
-                const delBtn = document.createElement('button');
-                delBtn.className = 'btn btn-delete'; delBtn.innerText = '삭제';
-                delBtn.onclick = () => { delete savedWords[word]; updateVocabulary(); updateHighlights(); };
+                dictBtn.target = '_blank';
+                dictBtn.className = 'btn btn-dict';
+                dictBtn.innerText = '사전 검색';
 
-                actions.appendChild(dictBtn); actions.appendChild(delBtn);
-                topRow.appendChild(titleDiv); topRow.appendChild(actions);
+                const delBtn = document.createElement('button');
+                delBtn.className = 'btn btn-delete';
+                delBtn.innerText = '삭제';
+                delBtn.onclick = () => {
+                    delete savedWords[word];
+                    updateVocabulary();
+                    updateHighlights();
+                };
+
+                actions.appendChild(dictBtn);
+                actions.appendChild(delBtn);
+
+                topRow.appendChild(titleDiv);
+                topRow.appendChild(actions);
 
                 const meaningInput = document.createElement('input');
-                meaningInput.type = 'text'; meaningInput.className = 'meaning-input';
+                meaningInput.type = 'text';
+                meaningInput.className = 'meaning-input';
                 meaningInput.placeholder = '사전에서 복사한 뜻을 붙여넣으세요';
-                meaningInput.value = savedWords[word] || '';
+                meaningInput.value = mean;
                 meaningInput.addEventListener('input', (e) => {
                     savedWords[word] = e.target.value;
                     localStorage.setItem('myVocabDictionary', JSON.stringify(savedWords));
-                    generatePrintLayout();
+                    generatePrintLayout('all');
                 });
 
-                li.appendChild(topRow); li.appendChild(meaningInput); list.appendChild(li);
+                li.appendChild(topRow);
+                li.appendChild(meaningInput);
+                list.appendChild(li);
             });
-
-            generatePrintLayout();
+            generatePrintLayout('all');
         }
 
-        function generatePrintLayout() {
+        function generatePrintLayout(mode = 'all') {
             const printArea = document.getElementById('print-area');
             const wordsArr = Object.keys(savedWords).map(k => ({ word: k, mean: savedWords[k] }));
             const totalWords = wordsArr.length;
             
-            if (totalWords === 0) { printArea.innerHTML = ''; return; }
+            if (totalWords === 0) {
+                printArea.innerHTML = '';
+                return;
+            }
 
-            // 🌟 수정됨: 한 페이지당 무려 42줄(총 84단어)이 들어가도록 변경!
-            const maxRowsPerPage = 42; 
+            const maxRowsPerPage = 42;
             const maxWordsPerPage = maxRowsPerPage * 2;
             const totalPages = Math.ceil(totalWords / maxWordsPerPage);
             let printHtml = '';
 
+            let printTitle = "📝 내신대비 나만의 영단어장";
+            if (mode === 'meaning_test') printTitle = "📝 영단어 [뜻] 쓰기 시험지";
+            if (mode === 'word_test') printTitle = "📝 [영어 단어] 쓰기 시험지";
+
             for (let p = 0; p < totalPages; p++) {
-                let leftRows = ''; let rightRows = '';
+                let leftRows = '';
+                let rightRows = '';
                 const pageStartIndex = p * maxWordsPerPage;
                 const wordsOnThisPage = Math.min(totalWords - pageStartIndex, maxWordsPerPage);
-                const actualRowsThisPage = Math.ceil(wordsOnThisPage / 2); 
+                const actualRowsThisPage = Math.ceil(wordsOnThisPage / 2);
 
                 for (let r = 0; r < actualRowsThisPage; r++) {
                     let lIdx = pageStartIndex + r;
                     let lItem = wordsArr[lIdx] || { word: '', mean: '' };
-                    leftRows += `<tr><td class="col-eng">${lItem.word}</td><td class="col-kor">${lItem.mean}</td></tr>`;
-                    
+                    let lWord = mode === 'word_test' ? '&nbsp;' : lItem.word;
+                    let lMean = mode === 'meaning_test' ? '&nbsp;' : lItem.mean;
+                    leftRows += `<tr><td class="col-eng">${lWord}</td><td class="col-kor">${lMean}</td></tr>`;
+
                     let rIdx = pageStartIndex + actualRowsThisPage + r;
                     let rItem = wordsArr[rIdx] || { word: '', mean: '' };
-                    rightRows += `<tr><td class="col-eng">${rItem.word}</td><td class="col-kor">${rItem.mean}</td></tr>`;
+                    let rWord = mode === 'word_test' ? '&nbsp;' : rItem.word;
+                    let rMean = mode === 'meaning_test' ? '&nbsp;' : rItem.mean;
+                    rightRows += `<tr><td class="col-eng">${rWord}</td><td class="col-kor">${rMean}</td></tr>`;
                 }
 
                 printHtml += `
                 <div class="print-page">
                     <div class="print-header">
-                        <span class="print-header-title">📝 내신대비 나만의 영단어장</span>
+                        <span class="print-header-title">${printTitle}</span>
                         <span class="print-header-sub">PDF/출력 제공본 (Page ${p + 1} / ${totalPages})</span>
                     </div>
                     <div class="print-table-wrapper">
@@ -663,60 +1007,100 @@ Only then will we truly have the power over our thoughts that Descartes believed
             const sidebar = document.getElementById('sidebar');
             const article = document.getElementById('article-container');
             const btn = document.getElementById('toggle-sidebar-btn');
-            sidebar.classList.toggle('hidden'); article.classList.toggle('full-width');
+            
+            sidebar.classList.toggle('hidden');
+            article.classList.toggle('full-width');
             btn.innerText = sidebar.classList.contains('hidden') ? "📖 단어장 보기" : "👁️ 단어장 숨기기";
         }
 
-        function saveAsPDF() { window.print(); }
+        function printPDF(mode) {
+            if (Object.keys(savedWords).length === 0) {
+                alert("인쇄할 단어가 없습니다. 먼저 지문에서 단어를 터치하여 추가해주세요!");
+                return;
+            }
+            generatePrintLayout(mode); 
+            window.print();            
+            generatePrintLayout('all'); 
+        }
 
         function exportData() {
-            if (Object.keys(savedWords).length === 0) { alert("백업할 단어가 없습니다!"); return; }
+            if (Object.keys(savedWords).length === 0) {
+                alert("백업할 단어가 없습니다!");
+                return;
+            }
             const dataStr = JSON.stringify(savedWords);
             const blob = new Blob([dataStr], { type: "application/json;charset=utf-8" });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url; a.download = '내신대비_단어장_백업.json'; document.body.appendChild(a);
-            a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+            a.href = url;
+            a.download = '내신대비_단어장_백업.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
         function importData(event) {
             const file = event.target.files[0];
             if (!file) return;
+
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const importedData = JSON.parse(e.target.result);
                     if (typeof importedData !== 'object' || importedData === null) throw new Error();
+
                     if (Object.keys(savedWords).length > 0) {
-                        if (confirm("기존 단어장에 추가(병합)하시겠습니까?\n[확인] : 기존 단어 유지 + 새 단어 추가\n[취소] : 기존 단어 삭제 후 완전히 덮어쓰기")) Object.assign(savedWords, importedData);
-                        else savedWords = importedData;
-                    } else savedWords = importedData;
-                    updateVocabulary(); updateHighlights(); alert("✅ 성공적으로 단어장을 불러왔습니다!");
-                } catch (error) { alert("❌ 잘못된 파일입니다. 백업 파일(.json)을 확인해주세요."); }
+                        if (confirm("기존 단어장에 추가(병합)하시겠습니까?\n[확인] : 기존 단어 유지 + 새 단어 추가\n[취소] : 기존 단어 삭제 후 완전히 덮어쓰기")) 
+                            Object.assign(savedWords, importedData);
+                        else 
+                            savedWords = importedData;
+                    } else 
+                        savedWords = importedData;
+                        
+                    updateVocabulary();
+                    updateHighlights();
+                    alert("✅ 성공적으로 단어장을 불러왔습니다!");
+                } catch (error) {
+                    alert("❌ 잘못된 파일입니다. 백업 파일(.json)을 확인해주세요.");
+                }
             };
-            reader.readAsText(file); event.target.value = "";
+            reader.readAsText(file);
+            event.target.value = ""; 
         }
 
         function clearAllWords() {
-            if(confirm("단어장을 모두 비우시겠습니까?")) { savedWords = {}; updateVocabulary(); updateHighlights(); }
+            if(confirm("단어장을 모두 비우시겠습니까?")) {
+                savedWords = {};
+                updateVocabulary();
+                updateHighlights();
+            }
         }
 
-        document.getElementById('text-content').addEventListener('click', function(e) {
+        document.getElementById('article-container').addEventListener('click', function(e) {
             if (e.target.classList.contains('word')) {
                 let clickedWord = e.target.innerText.toLowerCase().replace(/^[^a-z]+|[^a-z]+$/g, '');
                 if (clickedWord) {
                     if (!(clickedWord in savedWords)) {
                         savedWords[clickedWord] = "";
-                        updateVocabulary(); updateHighlights();
+                        updateVocabulary();
+                        updateHighlights();
+                        
                         const sidebar = document.getElementById('sidebar');
-                        if (sidebar.classList.contains('hidden')) toggleSidebar();
-                        setTimeout(() => { sidebar.scrollTo({ top: sidebar.scrollHeight, behavior: 'smooth' }); }, 50);
-                    } else alert("이미 단어장에 추가된 단어입니다.");
+                        if (!sidebar.classList.contains('hidden')) {
+                            setTimeout(() => {
+                                sidebar.scrollTo({ top: sidebar.scrollHeight, behavior: 'smooth' });
+                            }, 50);
+                        }
+                    }
                 }
             }
         });
 
-        window.onload = () => { changeLesson(); updateVocabulary(); };
+        window.onload = () => {
+            changeLesson();
+            updateVocabulary();
+        };
     </script>
 </body>
 </html>
