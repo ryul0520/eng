@@ -918,6 +918,8 @@ Only then will we truly have the power over our thoughts that Descartes believed
                 if (currentFilter === 'filled' && mean.trim() === '') return;
 
                 const li = document.createElement('li');
+                li.id = 'word-item-' + word; // 🌟 추가: 스크롤 이동을 위한 ID 부여
+
                 const topRow = document.createElement('div');
                 topRow.className = 'word-top-row';
 
@@ -951,6 +953,7 @@ Only then will we truly have the power over our thoughts that Descartes believed
 
                 const meaningInput = document.createElement('input');
                 meaningInput.type = 'text';
+                meaningInput.id = 'word-input-' + word; // 🌟 추가: 포커스를 위한 ID 부여
                 meaningInput.className = 'meaning-input';
                 meaningInput.placeholder = '사전에서 복사한 뜻을 붙여넣으세요';
                 meaningInput.value = mean;
@@ -968,7 +971,6 @@ Only then will we truly have the power over our thoughts that Descartes believed
             
             generatePrintLayout('all');
         }
-
         function generatePrintLayout(mode = 'all') {
             const printArea = document.getElementById('print-area');
             const wordsArr = Object.keys(savedWords).map(k => ({ word: k, mean: savedWords[k] }));
@@ -1133,6 +1135,7 @@ Only then will we truly have the power over our thoughts that Descartes believed
                 let clickedWord = e.target.innerText.toLowerCase().replace(/^[^a-z]+|[^a-z]+$/g, '');
                 if (clickedWord) {
                     if (!(clickedWord in savedWords)) {
+                        // 🌟 새로운 단어 추가 시
                         savedWords[clickedWord] = "";
                         updateVocabulary();
                         updateHighlights();
@@ -1143,6 +1146,40 @@ Only then will we truly have the power over our thoughts that Descartes believed
                                 sidebar.scrollTo({ top: sidebar.scrollHeight, behavior: 'smooth' });
                             }, 50);
                         }
+                    } else {
+                        // 🌟 이미 선택된 단어 클릭 시 (수정 모드 이동)
+                        
+                        // 1. 단어장이 숨겨져 있다면 열기
+                        const sidebar = document.getElementById('sidebar');
+                        if (sidebar.classList.contains('hidden')) {
+                            toggleSidebar();
+                        }
+                        
+                        // 2. 단어가 필터링에 가려져 안 보일 수 있으므로 필터를 '전체 단어'로 변경
+                        if (currentFilter !== 'all') {
+                            setFilter('all');
+                        }
+                        
+                        // 3. 해당 단어 위치로 스크롤 및 포커스 (UI 렌더링 시간 고려하여 약간의 딜레이)
+                        setTimeout(() => {
+                            const targetLi = document.getElementById('word-item-' + clickedWord);
+                            const targetInput = document.getElementById('word-input-' + clickedWord);
+                            
+                            if (targetLi && targetInput) {
+                                // 해당 단어를 화면 중앙에 오도록 부드럽게 스크롤
+                                targetLi.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                
+                                // 뜻 입력창에 커서 맞추기
+                                targetInput.focus();
+                                
+                                // 사용자가 쉽게 찾을 수 있도록 배경색을 노란색으로 잠깐 깜빡임 처리
+                                targetLi.style.transition = 'background-color 0.3s ease';
+                                targetLi.style.backgroundColor = '#fff3cd';
+                                setTimeout(() => {
+                                    targetLi.style.backgroundColor = '#ffffff';
+                                }, 800);
+                            }
+                        }, 150);
                     }
                 }
             }
