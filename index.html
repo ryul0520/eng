@@ -101,7 +101,7 @@
         #sidebar.hidden { display: none !important; }
         #sidebar h2 { color: #343a40; font-size: 1.8rem; margin-top: 0; border-bottom: 3px solid #adb5bd; padding-bottom: 15px; margin-bottom: 15px; }
         
-        .guide-text { font-size: 1.05rem; color: #495057; background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 15px; word-break: keep-all; line-height:1.5;}
+        .guide-text { font-size: 1rem; color: #495057; background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 15px; word-break: keep-all; line-height:1.5;}
         
         .filter-controls { display: flex; gap: 10px; margin-bottom: 15px; }
         .filter-btn { background-color: #e9ecef; color: #495057; padding: 10px; font-size: 0.95rem; flex: 1; transition: all 0.2s; border:none; border-radius:8px; cursor:pointer; font-weight:bold;}
@@ -110,14 +110,40 @@
 
         .word { cursor: pointer; transition: all 0.2s; border-radius: 4px; padding: 2px 4px; }
         .word:hover { background-color: #e9ecef; }
+        
+        /* 🌟 형광펜 스타일 */
         .highlighted { background-color: #ffe066 !important; color: #d9480f !important; font-weight: bold; }
+        /* 합쳐진 단어(숙어)를 위한 빨간색 형광펜 추가 */
+        .highlighted-red { background-color: #ffe3e3 !important; color: #e03131 !important; font-weight: bold; }
         
         #word-list { list-style-type: none; padding: 0; padding-bottom: 100px; margin: 0; flex-grow: 1; }
-        #word-list li { background: #ffffff; margin-bottom: 15px; padding: 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 12px; border: 2px solid transparent;}
         
+        /* 🌟 단어장 아이템 (드래그 앤 드롭 효과 추가) */
+        #word-list li { 
+            background: #ffffff; margin-bottom: 15px; padding: 18px; border-radius: 12px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 12px; 
+            border: 2px solid transparent; transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+        }
+        .draggable-li { cursor: grab; }
+        .draggable-li:active { cursor: grabbing; }
+        .drag-over-target { border: 2px dashed #f59f00 !important; background-color: #fff4e6 !important; transform: scale(1.02); }
+        .dragging { opacity: 0.5; box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important; }
+
         .word-top-row { display: flex; justify-content: space-between; align-items: center; gap:10px;}
         
-        /* 🌟 수정 가능한 영어 단어 입력칸 스타일 */
+        /* 🌟 드래그 핸들 (모바일 및 시각적 안내용) */
+        .drag-handle {
+            cursor: inherit;
+            color: #ced4da;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            touch-action: none; /* 모바일에서 스크롤 대신 드래그 가능하게 */
+        }
+        .drag-handle:active { color: #f59f00; }
+
         .word-title-input {
             font-size: 1.3rem;
             font-weight: 800;
@@ -157,7 +183,6 @@
         #toggle-sidebar-btn:active { transform: scale(0.95); }
         #print-area { display: none; }
 
-        /* 🌟 플로팅 버튼 (드래그하여 단어 추가) */
         #add-phrase-btn {
             display: none;
             position: fixed;
@@ -186,8 +211,7 @@
             #resizer { display: none !important; }
             #sidebar { flex: none; height: auto; padding: 20px; }
             #toggle-sidebar-btn { bottom: 20px; right: 20px; padding: 12px 20px; font-size: 1rem; }
-            .word-top-row { flex-direction: column; align-items: stretch;}
-            .word-title-input { font-size:1.5rem; text-align:center; }
+            .word-top-row { flex-direction: row; align-items: center;}
         }
 
         /* ================= PDF 인쇄 전용 스타일 ================= */
@@ -250,8 +274,8 @@
         <div class="guide-text">
             ✍️ <b>사용 방법:</b><br>
             1. <b>단어 터치</b>: 모르는 단어를 누르면 추가됩니다.<br>
-            2. <b>드래그 선택</b>: 꾹 누르고 문장을 드래그하면 숙어도 추가 가능!<br>
-            3. <b>단어 수정</b>: 추가된 주황색 영단어를 터치하여 동사원형 등으로 자유롭게 변경 가능합니다 (본문 형광펜은 그대로 유지됨).
+            2. <b>문장 드래그</b>: 본문을 드래그해서 숙어도 추가 가능!<br>
+            3. <b>단어장 내 결합</b>: 단어장 좌측 <b>점자(⋮⋮)</b> 아이콘을 꾹 눌러 <b>다른 단어 위로 드래그(드롭)하면 두 단어가 하나의 숙어로 합쳐집니다!</b> (스마트폰 지원)
         </div>
 
         <div class="filter-controls">
@@ -385,9 +409,6 @@ Thus, if you want to know whether a 14-year-old runner will be a good runner whe
             "lesson4_main": { title: "Psychology Behind Decision Making", content: `Psychology Behind Decision Making`}
         };
 
-        // 🌟 데이터 구조 업그레이드 (구버전 호환성)
-        // 기존: { "apple": "사과" }
-        // 신규: { "apple": { displayWord: "apple", mean: "사과" } }
         let rawSavedWords = JSON.parse(localStorage.getItem('myVocabDictionary')) || {};
         let savedWords = {};
         for(let key in rawSavedWords) {
@@ -400,6 +421,7 @@ Thus, if you want to know whether a 14-year-old runner will be a good runner whe
 
         let isKorHidden = false;
         let currentFilter = 'all';
+        let draggedWordKey = null; // 🌟 드래그 중인 단어 키 기억
 
         function toggleTranslation() {
             isKorHidden = !isKorHidden;
@@ -439,31 +461,90 @@ Thus, if you want to know whether a 14-year-old runner will be a good runner whe
             updateHighlights();
         }
 
-        // 🌟 형광펜 로직 개선: 단일 단어 및 여러 단어(숙어) 동시 처리
         function updateHighlights() {
             const spans = document.querySelectorAll('.word');
-            spans.forEach(s => s.classList.remove('highlighted'));
+            
+            // 1. 모든 형광펜 초기화
+            spans.forEach(s => {
+                s.classList.remove('highlighted', 'highlighted-red');
+            });
+
+            // 2. 단어장 내 합쳐진 숙어(띄어쓰기가 있는 키)의 개별 단어 목록 수집
+            let mergedSubWords = new Set();
+            Object.keys(savedWords).forEach(key => {
+                if (key.includes(' ')) { // 공백이 있으면 합쳐진 숙어로 간주
+                    key.split(' ').forEach(w => {
+                        if(w) mergedSubWords.add(w);
+                    });
+                }
+            });
 
             for (let i = 0; i < spans.length; i++) {
                 let currentPhrase = "";
                 let matchLength = 0;
+                let isMergedPhrase = false;
 
-                // 최대 10개의 단어를 이어붙여가며 저장된 숙어가 있는지 확인
+                // 3. 현재 위치부터 최대 10단어까지 연속 일치 확인
                 for (let j = 0; j < 10 && (i + j) < spans.length; j++) {
                     let wordStr = spans[i+j].innerText.toLowerCase().replace(/^[^a-z]+|[^a-z]+$/g, '');
+                    if (!wordStr) break;
+                    
                     currentPhrase = currentPhrase ? currentPhrase + " " + wordStr : wordStr;
 
+                    // 단어장에 연속된 구문이 존재하는지 확인
                     if (savedWords[currentPhrase]) {
-                        matchLength = j + 1; // 가장 긴 매칭 기억
+                        matchLength = j + 1;
+                        isMergedPhrase = currentPhrase.includes(' '); // 띄어쓰기가 있으면 숙어로 판별
                     }
                 }
 
-                // 매칭된 숙어(또는 단어)가 있다면 해당 span들 모두 형광펜 처리
+                // 4. 일치 결과에 따라 클래스 부여
                 if (matchLength > 0) {
                     for (let k = 0; k < matchLength; k++) {
-                        spans[i+k].classList.add('highlighted');
+                        if (isMergedPhrase) {
+                            spans[i+k].classList.add('highlighted-red'); // 합쳐진 숙어는 빨간색 형광펜
+                        } else {
+                            spans[i+k].classList.add('highlighted'); // 단일 단어는 기본 노란색 형광펜
+                        }
+                    }
+                } else {
+                    // 5. 연속 일치는 없지만, 본문의 단어가 '합쳐진 숙어'에 속한 단어일 경우 개별적으로 빨간색 형광펜 유지!
+                    let singleWord = spans[i].innerText.toLowerCase().replace(/^[^a-z]+|[^a-z]+$/g, '');
+                    if (singleWord && mergedSubWords.has(singleWord)) {
+                        spans[i].classList.add('highlighted-red');
                     }
                 }
+            }
+        }
+
+        // 🌟 두 단어 병합 로직 (드래그 앤 드롭 완료 시 호출)
+        function mergeWords(dragKey, targetKey) {
+            const dragItem = savedWords[dragKey];
+            const targetItem = savedWords[targetKey];
+            if (!dragItem || !targetItem) return;
+
+            // 사용자에게 수정 가능한 최종 조합형태 제시
+            const defaultCombo = `${targetItem.displayWord} ${dragItem.displayWord}`;
+            const mergedPhrase = prompt("🔗 두 단어를 하나의 숙어(구문)로 합치시겠습니까?\n완성될 형태를 확인/수정해주세요:", defaultCombo);
+
+            if (mergedPhrase && mergedPhrase.trim() !== "") {
+                const newKey = mergedPhrase.toLowerCase().replace(/[^a-z\s\-]/g, '').replace(/\s+/g, ' ').trim();
+                
+                let combinedMean = [];
+                if(targetItem.mean.trim()) combinedMean.push(targetItem.mean.trim());
+                if(dragItem.mean.trim()) combinedMean.push(dragItem.mean.trim());
+
+                savedWords[newKey] = {
+                    displayWord: mergedPhrase,
+                    mean: combinedMean.join(", ")
+                };
+
+                delete savedWords[dragKey];
+                delete savedWords[targetKey];
+
+                updateVocabulary();
+                updateHighlights();
+                focusOnWord(newKey);
             }
         }
 
@@ -488,11 +569,84 @@ Thus, if you want to know whether a 14-year-old runner will be a good runner whe
 
                 const li = document.createElement('li');
                 li.id = 'word-item-' + key.replace(/\s+/g, '-');
+                
+                // 🌟 드래그 앤 드롭을 위한 속성 추가
+                li.draggable = true;
+                li.classList.add('draggable-li');
+                li.dataset.key = key;
+
+                // [PC 드래그 이벤트]
+                li.addEventListener('dragstart', function(e) {
+                    draggedWordKey = this.dataset.key;
+                    this.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', this.dataset.key);
+                });
+                li.addEventListener('dragover', function(e) {
+                    e.preventDefault(); 
+                    if (this.dataset.key !== draggedWordKey) this.classList.add('drag-over-target');
+                });
+                li.addEventListener('dragleave', function(e) {
+                    this.classList.remove('drag-over-target');
+                });
+                li.addEventListener('drop', function(e) {
+                    e.preventDefault(); e.stopPropagation();
+                    this.classList.remove('drag-over-target');
+                    const targetKey = this.dataset.key;
+                    if (draggedWordKey && targetKey && draggedWordKey !== targetKey) {
+                        mergeWords(draggedWordKey, targetKey);
+                    }
+                });
+                li.addEventListener('dragend', function(e) {
+                    this.classList.remove('dragging');
+                    document.querySelectorAll('.draggable-li').forEach(item => item.classList.remove('drag-over-target'));
+                });
 
                 const topRow = document.createElement('div');
                 topRow.className = 'word-top-row';
 
-                // 🌟 수정 가능한 영단어 인풋 박스
+                // 🌟 드래그 핸들 (UI 직관성 + 모바일 터치 대응)
+                const dragHandle = document.createElement('div');
+                dragHandle.className = 'drag-handle';
+                dragHandle.innerHTML = '⋮⋮';
+                dragHandle.title = "이 아이콘을 드래그해서 다른 단어와 합치기";
+                
+                // [모바일 스마트폰 드래그/합치기 이벤트]
+                dragHandle.addEventListener('touchstart', function(e) {
+                    e.preventDefault(); // 스크롤 방지
+                    draggedWordKey = li.dataset.key;
+                    li.classList.add('dragging');
+                }, {passive: false});
+
+                dragHandle.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const elem = document.elementFromPoint(touch.clientX, touch.clientY);
+                    
+                    document.querySelectorAll('.draggable-li').forEach(item => item.classList.remove('drag-over-target'));
+                    if (elem) {
+                        const targetLi = elem.closest('li.draggable-li');
+                        if (targetLi && targetLi.dataset.key !== draggedWordKey) {
+                            targetLi.classList.add('drag-over-target');
+                        }
+                    }
+                }, {passive: false});
+
+                dragHandle.addEventListener('touchend', function(e) {
+                    li.classList.remove('dragging');
+                    const touch = e.changedTouches[0];
+                    const elem = document.elementFromPoint(touch.clientX, touch.clientY);
+                    
+                    document.querySelectorAll('.draggable-li').forEach(item => item.classList.remove('drag-over-target'));
+                    if (elem) {
+                        const targetLi = elem.closest('li.draggable-li');
+                        if (targetLi && targetLi.dataset.key !== draggedWordKey) {
+                            mergeWords(draggedWordKey, targetLi.dataset.key);
+                        }
+                    }
+                    draggedWordKey = null;
+                });
+
                 const displayInput = document.createElement('input');
                 displayInput.type = 'text';
                 displayInput.className = 'word-title-input';
@@ -512,7 +666,6 @@ Thus, if you want to know whether a 14-year-old runner will be a good runner whe
                 dictBtn.target = '_blank';
                 dictBtn.className = 'btn btn-dict';
                 dictBtn.innerText = '사전';
-                // 사전 버튼 누를때 변경된 단어값 반영을 위해 이벤트로 href 갱신
                 dictBtn.addEventListener('mousedown', () => {
                     dictBtn.href = `https://en.dict.naver.com/#/search?query=${encodeURIComponent(savedWords[key].displayWord)}`;
                 });
@@ -529,6 +682,7 @@ Thus, if you want to know whether a 14-year-old runner will be a good runner whe
                 actions.appendChild(dictBtn);
                 actions.appendChild(delBtn);
 
+                topRow.appendChild(dragHandle); // 핸들 배치
                 topRow.appendChild(displayInput);
                 topRow.appendChild(actions);
 
@@ -552,7 +706,6 @@ Thus, if you want to know whether a 14-year-old runner will be a good runner whe
             generatePrintLayout('all');
         }
 
-        // 🌟 인쇄 출력 로직 (변경된 영단어 displayWord 기준 출력)
         function generatePrintLayout(mode = 'all') {
             const printArea = document.getElementById('print-area');
             const wordsArr = Object.keys(savedWords).map(k => ({ 
@@ -664,7 +817,6 @@ Thus, if you want to know whether a 14-year-old runner will be a good runner whe
             if(confirm("단어장을 모두 비우시겠습니까?")) { savedWords = {}; updateVocabulary(); updateHighlights(); }
         }
 
-        // 특정 단어로 스크롤 및 시각적 효과 헬퍼 함수
         function focusOnWord(wordKey) {
             const sidebar = document.getElementById('sidebar');
             if (sidebar.classList.contains('hidden')) toggleSidebar();
@@ -686,9 +838,7 @@ Thus, if you want to know whether a 14-year-old runner will be a good runner whe
             }, 150);
         }
 
-        // 🌟 단일 단어 클릭 이벤트
         document.getElementById('article-container').addEventListener('click', function(e) {
-            // 드래그 중인 텍스트가 있으면 클릭 이벤트 무시 (숙어 선택 모드 방해 방지)
             if (window.getSelection().toString().trim().length > 0) return;
 
             if (e.target.classList.contains('word')) {
@@ -704,23 +854,19 @@ Thus, if you want to know whether a 14-year-old runner will be a good runner whe
             }
         });
 
-        // 🌟 여러 단어(숙어) 드래그 선택 기능 및 플로팅 버튼
         const addPhraseBtn = document.getElementById('add-phrase-btn');
         let currentSelectedPhrase = "";
 
         document.addEventListener('selectionchange', () => {
             const selection = window.getSelection();
             const text = selection.toString().trim();
-            // 불필요한 특수문자 제거 후 단어화
             let cleanedPhrase = text.toLowerCase().replace(/[^a-z\s\-]/g, '').replace(/\s+/g, ' ').trim();
 
-            // 공백이 포함된 구문(숙어)일 경우 플로팅 버튼 표시
             if (cleanedPhrase.includes(' ') && cleanedPhrase.length > 3) {
                 const range = selection.getRangeAt(0);
                 const rect = range.getBoundingClientRect();
                 
                 addPhraseBtn.style.display = 'block';
-                // 선택 영역의 정중앙 약간 위에 버튼 배치
                 addPhraseBtn.style.top = Math.max(10, rect.top - 50) + 'px';
                 addPhraseBtn.style.left = (rect.left + (rect.width / 2)) + 'px';
                 
@@ -730,29 +876,26 @@ Thus, if you want to know whether a 14-year-old runner will be a good runner whe
             }
         });
 
-        // 플로팅 버튼 클릭 시 단어장에 숙어 추가
         addPhraseBtn.addEventListener('mousedown', (e) => {
-            e.preventDefault(); // 텍스트 선택 해제 방지
+            e.preventDefault(); 
             if (currentSelectedPhrase) {
                 if (!(currentSelectedPhrase in savedWords)) {
                     savedWords[currentSelectedPhrase] = { displayWord: currentSelectedPhrase, mean: "" };
                     updateVocabulary();
                     updateHighlights();
                 }
-                window.getSelection().removeAllRanges(); // 선택 해제
+                window.getSelection().removeAllRanges();
                 addPhraseBtn.style.display = 'none';
                 focusOnWord(currentSelectedPhrase);
             }
         });
 
-        // 화면 터치/클릭 시 선택 영역이 없으면 플로팅 버튼 숨김
         document.addEventListener('mousedown', (e) => {
             if(e.target !== addPhraseBtn && window.getSelection().toString().trim().length === 0) {
                 addPhraseBtn.style.display = 'none';
             }
         });
 
-        // 🌟 본문 / 단어장 크기 조절 (Resizer)
         const resizer = document.getElementById('resizer');
         const leftSide = document.getElementById('article-container');
         const rightSide = document.getElementById('sidebar');
